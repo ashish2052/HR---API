@@ -956,4 +956,102 @@ function renderCountryPayrollTable() {
   const map = {};
 
   employees.forEach(e => {
-    if (!map[e.country])
+    if (!map[e.country]) map[e.country] = { count: 0, total: 0 };
+    map[e.country].count++;
+    map[e.country].total += salaryNPR(e);
+  });
+
+  const list = Object.keys(map).map(k => ({
+    country: k,
+    count: map[k].count,
+    total: map[k].total
+  })).sort((a,b) => b.total - a.total);
+
+  document.getElementById("topCountryName").innerText =
+    list.length ? list[0].country : "–";
+  document.getElementById("topCountryVal").innerText =
+    list.length ? formatNumber(list[0].total) + " NPR" : "";
+
+  list.forEach(x => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${x.country}</td>
+      <td>${x.count}</td>
+      <td>${formatNumber(x.total)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function setupTabs() {
+  document.querySelectorAll(".tab").forEach(t => {
+    t.onclick = () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+
+      t.classList.add("active");
+      document.getElementById("tab-" + t.dataset.tab).classList.add("active");
+    };
+  });
+}
+
+function setupDrilldowns() {
+  document.getElementById("kpiTotalCard").onclick = () => {
+    switchTab("people");
+    document.getElementById("filterStatus").value = "";
+    document.getElementById("filterDept").value = "";
+    document.getElementById("filterCountry").value = "";
+    document.getElementById("searchInput").value = "";
+    applyPeopleFilters();
+  };
+
+  document.getElementById("kpiActiveCard").onclick = () => {
+    switchTab("people");
+    document.getElementById("filterStatus").value = "Active";
+    applyPeopleFilters();
+  };
+
+  document.getElementById("kpiInactiveCard").onclick = () => {
+    switchTab("people");
+    document.getElementById("filterStatus").value = "Inactive";
+    applyPeopleFilters();
+  };
+
+  document.getElementById("kpiProbCard").onclick = () => {
+    switchTab("people");
+    document.getElementById("filterStatus").value = "Probation";
+    applyPeopleFilters();
+  };
+}
+
+function switchTab(key) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(t => t.classList.remove("active"));
+
+  document.querySelector(`.tab[data-tab='${key}']`).classList.add("active");
+  document.getElementById("tab-" + key).classList.add("active");
+}
+
+async function init() {
+  await loadHRData();
+
+  renderKPIs();
+  renderTenureCards();
+  renderOverviewCharts();
+
+  buildPeopleFilters();
+  setupPeopleFilters();
+  applyPeopleFilters();
+
+  buildCompCountryFilter();
+  renderCompensation();
+
+  setupTabs();
+  setupDrilldowns();
+}
+
+init();
+
+</script>
+</body>
+</html>
