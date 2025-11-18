@@ -5,610 +5,194 @@
 <title>HR Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-/* =========================================================
-   DARK NEON THEME (UNCHANGED)
-========================================================= */
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #050A1F;
-  color: #E6EBFF;
-}
-
-/* NAVBAR */
-.navbar {
-  background: rgba(0,0,0,0.35);
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid #0d1a40;
-  box-shadow: 0 0 25px #002a80 inset;
-}
-
-.nav-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #9EC5FF;
-  text-shadow: 0 0 12px #007bff;
-}
-
-/* TABS */
-.tabs {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 25px;
-}
-
-.tab {
-  padding: 10px 24px;
-  margin: 0 12px;
-  cursor: pointer;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid #0d1a40;
-  color: #A6C7FF;
-  font-weight: 500;
-  transition: 0.3s;
-}
-
-.tab.active {
-  background: #002a80;
-  color: #fff;
-  box-shadow: 0 0 12px #0055ff;
-}
-
-/* KPI CARDS */
-.kpi-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px;
-  margin: 25px auto;
-  max-width: 1200px;
-}
-
-.kpi-card {
-  width: 250px;
-  padding: 22px;
-  background: rgba(0,0,0,0.45);
-  border: 1px solid #0d1a40;
-  border-radius: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.25s;
-  box-shadow: 0 0 12px #002a80 inset;
-}
-
-.kpi-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 20px #0040ff inset, 0 0 10px #0040ff;
-}
-
-.kpi-title {
-  font-size: 18px;
-  color: #9EC5FF;
-  margin-bottom: 8px;
-}
-
-.kpi-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 0 10px #007bff;
-}
-
-/* SECTION TITLES */
-.section-title {
-  text-align: center;
-  margin-top: 35px;
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #9EC5FF;
-  text-shadow: 0 0 10px #0066ff;
-}
-
-/* CHART BOXES */
-.chart-box {
-  max-width: 1100px;
-  margin: 25px auto;
-  padding: 25px;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid #0d1a40;
-  border-radius: 18px;
-  box-shadow: 0 0 25px #002a80 inset;
-}
-
-/* TABLE SECTION */
-.table-container {
-  max-width: 1400px;
-  margin: 30px auto;
-  overflow-x: auto;
-  background: rgba(0,0,0,0.35);
-  padding: 20px;
-  border-radius: 18px;
-  border: 1px solid #0d1a40;
-  box-shadow: 0 0 25px #002a80 inset;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #E6EBFF;
-}
-
-table th {
-  padding: 12px;
-  text-align: left;
-  background: rgba(0,0,0,0.5);
-  border-bottom: 1px solid #0d1a40;
-  color: #9EC5FF;
-}
-
-table td {
-  padding: 10px;
-  border-bottom: 1px solid #0d1a40;
-}
-
-/* HIDE SECTIONS */
-.section { display: none; }
-.section.active { display: block; }
+    body {
+        background: #050B1A;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #CFE4FF;
+    }
+    h1 {
+        text-align: center;
+        color: #74A9FF;
+        text-shadow: 0 0 12px #0058ff;
+        margin-top: 25px;
+    }
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .tab-container button {
+        background: rgba(0,0,0,0.35);
+        border: 1px solid #123;
+        padding: 12px 25px;
+        margin: 0 8px;
+        border-radius: 14px;
+        color: #9EC5FF;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .tab-container button.active {
+        background: #00308f;
+        box-shadow: 0 0 10px #0058ff;
+    }
+    .kpi-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+    .kpi-box {
+        width: 260px;
+        background: rgba(0,0,20,0.45);
+        margin: 12px;
+        padding: 22px;
+        border-radius: 16px;
+        text-align: center;
+        border: 1px solid #0D1A40;
+        box-shadow: 0 0 18px #00256b inset;
+    }
+    .kpi-title {
+        color: #9EC5FF;
+        font-size: 17px;
+        margin-bottom: 5px;
+    }
+    .kpi-value {
+        color: #fff;
+        font-size: 42px;
+        font-weight: 700;
+        text-shadow: 0 0 8px #007bff;
+    }
+    .section-title {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 15px;
+        font-size: 22px;
+        color: #9EC5FF;
+        text-shadow: 0 0 8px #007bff;
+    }
 </style>
 </head>
 
 <body>
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-title">HR Dashboard</div>
+
+<h1>HR Dashboard</h1>
+
+<div class="tab-container">
+    <button class="active">Overview</button>
+    <button>Employee Details</button>
+    <button>Compensation</button>
 </div>
 
-<!-- TABS -->
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('overview')">Overview</div>
-  <div class="tab" onclick="switchTab('employees')">Employee Details</div>
-  <div class="tab" onclick="switchTab('compensation')">Compensation</div>
-</div>
-
-<!-- ============================
-     SECTION: OVERVIEW
-============================= -->
-<div id="overview" class="section active">
-
-  <!-- KPI ROW -->
-  <div class="kpi-row">
-    <div class="kpi-card" onclick="filterBy('all')">
-      <div class="kpi-title">Total Employees</div>
-      <div class="kpi-value" id="kpiTotal">0</div>
-    </div>
-
-    <div class="kpi-card" onclick="filterBy('active')">
-      <div class="kpi-title">Active Employees</div>
-      <div class="kpi-value" id="kpiActive">0</div>
-    </div>
-
-    <div class="kpi-card" onclick="filterBy('inactive')">
-      <div class="kpi-title">Inactive Employees</div>
-      <div class="kpi-value" id="kpiInactive">0</div>
-    </div>
-
-    <div class="kpi-card" onclick="filterBy('probation')">
-      <div class="kpi-title">On Probation</div>
-      <div class="kpi-value" id="kpiProbation">0</div>
-    </div>
-
-    <div class="kpi-card" onclick="filterBy('probationEnding')">
-      <div class="kpi-title">Probation Ending Soon</div>
-      <div class="kpi-value" id="kpiProbEnd">0</div>
-    </div>
-  </div>
-
-  <!-- PART 1 ENDS HERE -->
-  <!-- ============================
-     SECTION: TENURE SUMMARY
-============================= -->
-
-<div class="section-title">Employee Tenure Summary</div>
-
-<!-- TENURE CARDS -->
 <div class="kpi-row">
-
-  <div class="kpi-card" onclick="filterByTenure('lt1')">
-    <div class="kpi-title">Less than 1 Year</div>
-    <div class="kpi-value" id="tenureLT1">0</div>
-  </div>
-
-  <div class="kpi-card" onclick="filterByTenure('1to2')">
-    <div class="kpi-title">1 – 2 Years</div>
-    <div class="kpi-value" id="tenure1to2">0</div>
-  </div>
-
-  <div class="kpi-card" onclick="filterByTenure('2to3')">
-    <div class="kpi-title">2 – 3 Years</div>
-    <div class="kpi-value" id="tenure2to3">0</div>
-  </div>
-
-  <div class="kpi-card" onclick="filterByTenure('3plus')">
-    <div class="kpi-title">3+ Years</div>
-    <div class="kpi-value" id="tenure3plus">0</div>
-  </div>
-
+    <div class="kpi-box">
+        <div class="kpi-title">Total Employees</div>
+        <div class="kpi-value" id="totalEmployees">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">Active Employees</div>
+        <div class="kpi-value" id="activeEmployees">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">Inactive Employees</div>
+        <div class="kpi-value" id="inactiveEmployees">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">On Probation</div>
+        <div class="kpi-value" id="onProbation">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">Probation Ending Soon</div>
+        <div class="kpi-value" id="probationSoon">0</div>
+    </div>
 </div>
 
+<h2 class="section-title">Employee Tenure Summary</h2>
 
-<!-- TENURE CHART -->
-<div class="chart-box">
-  <canvas id="tenureChart" height="200"></canvas>
-</div>
-
-<script>
-// ================================
-//  TENURE CALCULATION FUNCTION
-// ================================
-function calculateTenure(joining) {
-  if (!joining) return 0;
-  const now = new Date();
-  const j = new Date(joining);
-  const diff = now - j;
-  return diff / (1000 * 60 * 60 * 24 * 365); // years
-}
-
-
-// ================================
-//  RENDER TENURE SUMMARY
-// ================================
-let tenureChartInstance = null;
-
-function renderTenure(employees) {
-
-  const activeOnly = employees.filter(e => e.status === "Active");
-
-  let lt1 = 0, y1to2 = 0, y2to3 = 0, y3plus = 0;
-
-  activeOnly.forEach(e => {
-    const t = calculateTenure(e.joining_date);
-
-    if (t < 1) lt1++;
-    else if (t < 2) y1to2++;
-    else if (t < 3) y2to3++;
-    else y3plus++;
-  });
-
-  // Update card values
-  document.getElementById('tenureLT1').textContent = lt1;
-  document.getElementById('tenure1to2').textContent = y1to2;
-  document.getElementById('tenure2to3').textContent = y2to3;
-  document.getElementById('tenure3plus').textContent = y3plus;
-
-  // Destroy old chart if exists
-  if (tenureChartInstance) {
-    tenureChartInstance.destroy();
-  }
-
-  // Create new chart
-  const ctx = document.getElementById('tenureChart').getContext('2d');
-  tenureChartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ["<1 Yr", "1-2 Yrs", "2-3 Yrs", "3+ Yrs"],
-      datasets: [{
-        label: "Number of Employees",
-        data: [lt1, y1to2, y2to3, y3plus],
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        tooltip: { enabled: true }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { color: "#9EC5FF" }
-        },
-        x: {
-          ticks: { color: "#9EC5FF" }
-        }
-      },
-      onClick: function(evt, elements) {
-        if (elements.length > 0) {
-          const index = elements[0].index;
-          if (index === 0) filterByTenure("lt1");
-          if (index === 1) filterByTenure("1to2");
-          if (index === 2) filterByTenure("2to3");
-          if (index === 3) filterByTenure("3plus");
-        }
-      }
-    }
-  });
-}
-
-
-// ================================
-//  TENURE FILTER LOGIC
-// ================================
-function filterByTenure(range) {
-  const now = new Date();
-
-  const filtered = window.allEmployees.filter(e => {
-    if (e.status !== "Active") return false;
-    const t = calculateTenure(e.joining_date);
-
-    if (range === "lt1") return t < 1;
-    if (range === "1to2") return t >= 1 && t < 2;
-    if (range === "2to3") return t >= 2 && t < 3;
-    if (range === "3plus") return t >= 3;
-    return false;
-  });
-
-  renderTable(filtered);
-  switchTab('employees');
-}
-
-</script>
-
-<!-- END OF PART 2 -->
-  <!-- ============================
-     SECTION: EMPLOYEE DETAILS
-============================= -->
-<div id="employees" class="section">
-
-  <div class="section-title">Employee Details</div>
-
-  <div class="table-container">
-    <table id="employeeTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Designation</th>
-          <th>Department</th>
-          <th>Country</th>
-          <th>Gender</th>
-          <th>Education</th>
-          <th>Joining Date</th>
-          <th>Probation End</th>
-          <th>Status</th>
-          <th>Salary FX</th>
-          <th>Salary</th>
-        </tr>
-      </thead>
-      <tbody id="employeeTableBody">
-      </tbody>
-    </table>
-  </div>
-
-</div>
-
-
-<!-- ============================
-     SECTION: COMPENSATION
-============================= -->
-<div id="compensation" class="section">
-
-  <div class="section-title">Compensation Overview</div>
-
-  <div class="chart-box">
-    <canvas id="compChart" height="180"></canvas>
-  </div>
-
-  <div class="chart-box">
-    <canvas id="deptSalaryChart" height="180"></canvas>
-  </div>
-
+<div class="kpi-row">
+    <div class="kpi-box">
+        <div class="kpi-title">Less than 1 Year</div>
+        <div class="kpi-value" id="lessOne">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">1 – 2 Years</div>
+        <div class="kpi-value" id="oneTwo">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">2 – 3 Years</div>
+        <div class="kpi-value" id="twoThree">0</div>
+    </div>
+    <div class="kpi-box">
+        <div class="kpi-title">3+ Years</div>
+        <div class="kpi-value" id="threePlus">0</div>
+    </div>
 </div>
 
 <script>
-// ================================================
-// GLOBAL STORAGE
-// ================================================
-window.allEmployees = [];
-let compChartInstance = null;
-let deptSalaryInstance = null;
+const API_URL = "https://hr-api.ashishoct34.workers.dev/";
 
-
-// ================================================
-// TAB SWITCHING
-// ================================================
-function switchTab(tab) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-
-  document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add("active");
-  document.getElementById(tab).classList.add("active");
-}
-
-
-// ================================================
-// FETCH HR API
-// ================================================
 async function loadData() {
-  try {
-    const res = await fetch("YOUR_WORKER_API_URL_HERE");
-    const data = await res.json();
+    try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const now = new Date();
 
-    window.allEmployees = data.employees;
+        // === SUMMARY ===
+        document.getElementById("totalEmployees").innerText = data.summary.total_employees;
+        document.getElementById("activeEmployees").innerText = data.summary.active_employees;
+        document.getElementById("inactiveEmployees").innerText = data.summary.inactive_employees;
 
-    renderKPIs(window.allEmployees);
-    renderTenure(window.allEmployees);
-    renderTable(window.allEmployees);
-    renderCompensation(data);
+        // On probation = status === "Probation"
+        let prob = data.employees.filter(e => e.status === "Probation").length;
+        document.getElementById("onProbation").innerText = prob;
 
-  } catch (err) {
-    console.error("API load failed:", err);
-  }
-}
+        // Probation ending soon from API summary
+        document.getElementById("probationSoon").innerText =
+            data.summary.probation_next_30_days;
 
+        // === TENURE (Active Employees Only) ===
+        const less1 = data.employees.filter(e => {
+            if (!e.joining_date || e.status !== "Active") return false;
+            let join = new Date(e.joining_date);
+            let yrs = (now - join) / (1000*60*60*24*365);
+            return yrs < 1;
+        }).length;
 
-// ================================================
-// RENDER KPI CARDS
-// ================================================
-function renderKPIs(list) {
-  const total = list.length;
-  const active = list.filter(e => e.status === "Active").length;
-  const inactive = list.filter(e => e.status === "Inactive").length;
+        const y1to2 = data.employees.filter(e => {
+            if (!e.joining_date || e.status !== "Active") return false;
+            let join = new Date(e.joining_date);
+            let yrs = (now - join) / (1000*60*60*24*365);
+            return yrs >= 1 && yrs < 2;
+        }).length;
 
-  const probation = list.filter(e => {
-    if (e.status !== "Active") return false;
-    if (!e.probation_end) return false;
-    return new Date(e.probation_end) > new Date();
-  }).length;
+        const y2to3 = data.employees.filter(e => {
+            if (!e.joining_date || e.status !== "Active") return false;
+            let join = new Date(e.joining_date);
+            let yrs = (now - join) / (1000*60*60*24*365);
+            return yrs >= 2 && yrs < 3;
+        }).length;
 
-  const endingSoon = list.filter(e => {
-    if (e.status !== "Active") return false;
-    if (!e.probation_end) return false;
+        const more3 = data.employees.filter(e => {
+            if (!e.joining_date || e.status !== "Active") return false;
+            let join = new Date(e.joining_date);
+            let yrs = (now - join) / (1000*60*60*24*365);
+            return yrs >= 3;
+        }).length;
 
-    const diff = (new Date(e.probation_end) - new Date()) / (1000 * 60 * 60 * 24);
-    return diff <= 30 && diff >= 0;
-  }).length;
+        document.getElementById("lessOne").innerText = less1;
+        document.getElementById("oneTwo").innerText = y1to2;
+        document.getElementById("twoThree").innerText = y2to3;
+        document.getElementById("threePlus").innerText = more3;
 
-  document.getElementById("kpiTotal").textContent = total;
-  document.getElementById("kpiActive").textContent = active;
-  document.getElementById("kpiInactive").textContent = inactive;
-  document.getElementById("kpiProbation").textContent = probation;
-  document.getElementById("kpiProbEnd").textContent = endingSoon;
-}
-
-
-// ================================================
-// FILTERING LOGIC FOR TOP CARDS
-// ================================================
-function filterBy(type) {
-  let filtered = [];
-
-  if (type === "all") filtered = window.allEmployees;
-  if (type === "active") filtered = window.allEmployees.filter(e => e.status === "Active");
-  if (type === "inactive") filtered = window.allEmployees.filter(e => e.status === "Inactive");
-
-  if (type === "probation") {
-    filtered = window.allEmployees.filter(e => {
-      if (e.status !== "Active") return false;
-      if (!e.probation_end) return false;
-      return new Date(e.probation_end) > new Date();
-    });
-  }
-
-  if (type === "probationEnding") {
-    filtered = window.allEmployees.filter(e => {
-      if (e.status !== "Active") return false;
-      if (!e.probation_end) return false;
-
-      const diff = (new Date(e.probation_end) - new Date()) / (1000 * 60 * 60 * 24);
-      return diff <= 30 && diff >= 0;
-    });
-  }
-
-  renderTable(filtered);
-  switchTab('employees');
-}
-
-
-// ================================================
-// RENDER EMPLOYEE TABLE
-// ================================================
-function renderTable(list) {
-  const tbody = document.getElementById("employeeTableBody");
-  tbody.innerHTML = "";
-
-  list.forEach(e => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${e.name}</td>
-      <td>${e.designation}</td>
-      <td>${e.department}</td>
-      <td>${e.country}</td>
-      <td>${e.gender}</td>
-      <td>${e.education}</td>
-      <td>${e.joining_date || ""}</td>
-      <td>${e.probation_end || ""}</td>
-      <td>${e.status}</td>
-      <td>${e.salary_fx}</td>
-      <td>${e.last_salary}</td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-
-// ================================================
-// COMPENSATION CHARTS
-// ================================================
-function renderCompensation(data) {
-
-  // --- CHART 1: Salary Distribution ---
-  const ctx1 = document.getElementById("compChart").getContext("2d");
-  const salaryBuckets = {};
-
-  data.employees.forEach(e => {
-    const key = e.salary_fx;
-    salaryBuckets[key] = (salaryBuckets[key] || 0) + 1;
-  });
-
-  if (compChartInstance) compChartInstance.destroy();
-  compChartInstance = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: Object.keys(salaryBuckets),
-      datasets: [{
-        label: "Employees",
-        data: Object.values(salaryBuckets),
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true, ticks: { color: "#9EC5FF" } },
-        x: { ticks: { color: "#9EC5FF" } }
-      }
+    } catch (e) {
+        console.error("Failed to load HR data:", e);
     }
-  });
-
-  // --- CHART 2: Department Avg Salary ---
-  const ctx2 = document.getElementById("deptSalaryChart").getContext("2d");
-
-  const labels = Object.keys(data.avg_salary_by_department);
-  const values = Object.values(data.avg_salary_by_department);
-
-  if (deptSalaryInstance) deptSalaryInstance.destroy();
-  deptSalaryInstance = new Chart(ctx2, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: "Avg Salary (NPR)",
-        data: values,
-        fill: false,
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true, ticks: { color: "#9EC5FF" } },
-        x: { ticks: { color: "#9EC5FF" } }
-      }
-    }
-  });
 }
 
-
-// ================================================
-// STARTUP
-// ================================================
-loadData();
-
+window.onload = loadData;
 </script>
 
 </body>
 </html>
-
-<!-- END OF PART 4 -->
-
-
-
