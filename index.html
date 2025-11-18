@@ -380,268 +380,7 @@ tbody tr:hover {
     </div>
 
   </div>
-     <!-- ============================================================
-       OVERVIEW TAB PANEL
-  ============================================================ -->
-  <div class="tab-panel active" id="tab-overview">
-
-    <!-- TENURE SUMMARY -->
-    <div class="section-card">
-      <div class="section-title">Employee Tenure Summary</div>
-
-      <div class="tenure-grid">
-
-        <div class="tenure-card" id="tenure0_3_card">
-          <div class="kpi-title">New Joiners (&lt; 3 months)</div>
-          <div class="tenure-value" id="tenure0_3">0</div>
-        </div>
-
-        <div class="tenure-card" id="tenure3_12_card">
-          <div class="kpi-title">3 months – 1 year</div>
-          <div class="tenure-value" id="tenure3_12">0</div>
-        </div>
-
-        <div class="tenure-card" id="tenure12_24_card">
-          <div class="kpi-title">1 – 2 years</div>
-          <div class="tenure-value" id="tenure12_24">0</div>
-        </div>
-
-        <div class="tenure-card" id="tenure24p_card">
-          <div class="kpi-title">2+ years</div>
-          <div class="tenure-value" id="tenure24p">0</div>
-        </div>
-
-      </div>
-
-      <div style="margin-top:28px;">
-        <canvas id="tenureChart"></canvas>
-      </div>
-    </div>
-
-
-    <!-- WORKFORCE COMPOSITION -->
-    <div class="section-card">
-      <div class="section-title">Workforce Composition</div>
-
-      <div class="overview-grid">
-        <!-- Department -->
-        <div>
-          <div class="kpi-title" style="margin-bottom:6px;">Department Distribution</div>
-          <canvas id="deptChart"></canvas>
-        </div>
-
-        <!-- Gender + Age -->
-        <div class="stack-2">
-          <div>
-            <div class="kpi-title" style="margin-bottom:6px;">Gender Split</div>
-            <canvas id="genderChart"></canvas>
-          </div>
-
-          <div>
-            <div class="kpi-title" style="margin-bottom:6px;">Age Groups</div>
-            <canvas id="ageChart"></canvas>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-
-    <!-- PROBATION ENDING SOON -->
-    <div class="section-card">
-      <div class="section-title">Probation Ending Within 30 Days</div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Department</th>
-              <th>Probation End</th>
-              <th>Days Left</th>
-            </tr>
-          </thead>
-
-          <tbody id="probationTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-  </div> <!-- END OVERVIEW -->
-
-
-  <!-- ============================================================
-       PEOPLE TAB PANEL
-  ============================================================ -->
-  <div class="tab-panel" id="tab-people">
-
-    <div class="section-card">
-      <div class="section-title">Employee Master List</div>
-
-      <!-- FILTER BAR -->
-      <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
-
-        <input id="searchInput"
-               placeholder="Search by name, ID, designation..."
-               style="flex:1; padding:12px; border-radius:12px;
-                      background:rgba(255,255,255,0.06); border:var(--border-soft);
-                      color:white; font-size:13px;">
-
-        <select id="filterStatus"
-                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
-                       border:var(--border-soft); color:white;">
-          <option value="">Status: All</option>
-          <option value="Active">Active</option>
-          <option value="Probation">Probation</option>
-          <option value="Inactive">Inactive</option>
-        </select>
-
-        <select id="filterDept"
-                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
-                       border:var(--border-soft); color:white;">
-          <option value="">Department: All</option>
-        </select>
-
-        <select id="filterCountry"
-                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
-                       border:var(--border-soft); color:white;">
-          <option value="">Country: All</option>
-        </select>
-
-      </div>
-
-      <!-- EMPLOYEE TABLE -->
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Designation</th>
-              <th>Department</th>
-              <th>Country</th>
-              <th>Status</th>
-              <th>Joining</th>
-              <th>Probation End</th>
-              <th>Salary</th>
-              <th>Currency</th>
-            </tr>
-          </thead>
-          <tbody id="employeeTableBody"></tbody>
-        </table>
-      </div>
-
-    </div>
-
-  </div> <!-- END PEOPLE -->
-
-
-
-  <!-- ============================================================
-       COMPENSATION TAB PANEL
-  ============================================================ -->
-  <div class="tab-panel" id="tab-compensation">
-
-    <div class="section-card">
-      <div class="section-title">Compensation & Payroll Summary</div>
-
-      <!-- COUNTRY FILTER -->
-      <div style="margin-bottom:20px;">
-        <select id="compCountry"
-                style="padding:12px; border-radius:12px;
-                       background:rgba(255,255,255,0.06);
-                       border:var(--border-soft); color:white;">
-          <option value="">Country: All</option>
-        </select>
-      </div>
-
-      <div class="overview-grid" style="grid-template-columns:1.2fr 1fr; gap:26px;">
-
-        <!-- LEFT COLUMN: TOTALS + FX CARDS -->
-        <div>
-
-          <div class="currency-card" style="
-                padding:20px; border-radius:16px;
-                background:rgba(255,255,255,0.06);
-                border:var(--border-soft);
-                box-shadow:var(--shadow-soft);
-              ">
-            <h3 style="margin:0; font-size:18px;">Total Payroll (NPR)</h3>
-            <div id="totalPayrollNPR"
-                 style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
-          </div>
-
-          <div class="currency-card" style="
-                margin-top:16px; padding:20px; border-radius:16px;
-                background:rgba(255,255,255,0.06);
-                border:var(--border-soft);
-                box-shadow:var(--shadow-soft);
-              ">
-            <h3 style="margin:0; font-size:18px;">Average Salary (NPR)</h3>
-            <div id="avgSalaryNPR"
-                 style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
-          </div>
-
-          <div class="currency-card" style="
-                margin-top:16px; padding:20px; border-radius:16px;
-                background:rgba(255,255,255,0.06);
-                border:var(--border-soft);
-                box-shadow:var(--shadow-soft);
-              ">
-            <h3 style="margin:0; font-size:18px;">Top Paying Country</h3>
-            <div id="topCountryName" style="font-size:22px; margin-top:4px;">–</div>
-            <div id="topCountryVal"
-                 style="font-size:14px; margin-top:4px; color:var(--text-muted);"></div>
-          </div>
-
-          <div class="currency-card" style="
-                margin-top:16px; padding:20px; border-radius:16px;
-                background:rgba(255,255,255,0.06);
-                border:var(--border-soft);
-                box-shadow:var(--shadow-soft);
-              ">
-            <h3 style="margin:0; font-size:18px;">Currency-wise Payroll</h3>
-
-            <div id="currencyCards" style="margin-top:14px;"></div>
-          </div>
-
-        </div> <!-- END LEFT -->
-
-
-        <!-- RIGHT COLUMN -->
-        <div class="currency-card" style="
-              padding:20px; border-radius:16px;
-              background:rgba(255,255,255,0.06);
-              border:var(--border-soft);
-              box-shadow:var(--shadow-soft);
-            ">
-          <h3 style="margin:0; font-size:18px;">Country-wise Payroll (NPR)</h3>
-
-          <div class="table-wrap" style="margin-top:14px; max-height:390px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Country</th>
-                  <th>Employees</th>
-                  <th>Total Payroll</th>
-                </tr>
-              </thead>
-              <tbody id="countryPayrollBody"></tbody>
-            </table>
-          </div>
-
-        </div>
-
-      </div> <!-- END overview-grid -->
-
-    </div>
-
-  </div> <!-- END COMPENSATION TAB -->
-
-</div> <!-- END SHELL -->
-
-
-<!-- ============================================================
+   <!-- ============================================================
      JAVASCRIPT LOGIC
 ============================================================ -->
 <script>
@@ -655,18 +394,28 @@ const BASE_CURRENCY = "NPR";
 
 
 /* ==========================================
-   FETCH + NORMALIZE
+   FETCH + NORMALIZE — FIXED FOR YOUR API
 ========================================== */
 async function loadHRData() {
   const res = await fetch(API_URL);
   const data = await res.json();
 
-  employees = data.employees.map(e => normalizeEmployee(e));
+  // Your API returns: { ..., employees: [ ... ] }
+  employees = (data.employees || []).map(e => normalizeEmployee(e));
 
-  const curList = [...new Set(employees.map(e => e.salary_currency).filter(Boolean))];
-  fxRates = await loadFxRates(curList);
+  // Your API does NOT return FX → fallback
+  fxRates = {
+    NPR: 1,
+    AUD: 90,       // You can update these later
+    INR: 1.6,
+    USD: 135
+  };
 }
 
+
+/* ==========================================
+   NORMALIZER
+========================================== */
 function normalizeEmployee(e) {
 
   const currency = (e.salary_fx || e.salary_currency || "NPR").toUpperCase();
@@ -850,7 +599,7 @@ function renderTenureChart(vals) {
 ========================================== */
 function renderOverviewCharts() {
 
-  // Department chart
+  // Dept
   const deptMap = countBy(employees, e => e.department);
   const dLabels = Object.keys(deptMap);
   const dVals = Object.values(deptMap);
@@ -868,8 +617,7 @@ function renderOverviewCharts() {
     }
   });
 
-
-  // Gender chart
+  // Gender
   const genderMap = countBy(employees, e => e.gender);
   const gLabels = Object.keys(genderMap);
   const gVals = Object.values(genderMap);
@@ -888,8 +636,7 @@ function renderOverviewCharts() {
     options:{ plugins:{ legend:{ labels:{color:"#ccc"}}}}
   });
 
-
-  // Age chart
+  // Age
   const ageMap = countBy(employees, ageGroup);
   const aLabels = Object.keys(ageMap);
   const aVals = Object.values(ageMap);
@@ -959,9 +706,13 @@ function renderProbationTable() {
     .sort((a,b) => a.daysLeft - b.daysLeft);
 
   if (!list.length) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">No probation ending soon</td>`;
-    tbody.appendChild(tr);
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">
+          No probation ending soon
+        </td>
+      </tr>
+    `;
     return;
   }
 
@@ -1040,9 +791,10 @@ function renderPeopleTable(list) {
   tbody.innerHTML = "";
 
   if (!list.length) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="10" style="padding:14px; opacity:0.6; text-align:center;">No employees found</td>`;
-    tbody.appendChild(tr);
+    tbody.innerHTML = `
+      <tr><td colspan="10" style="padding:14px;opacity:0.6;text-align:center;">
+        No employees found
+      </td></tr>`;
     return;
   }
 
