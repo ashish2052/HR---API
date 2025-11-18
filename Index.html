@@ -9,7 +9,7 @@
 <style>
 
 /* ============================================================
-   PREMIUM GLASS + NEON THEME
+   PREMIUM GLASS + NEON THEME — GITHUB SAFE VERSION
 ============================================================ */
 
 :root {
@@ -91,6 +91,8 @@ h1 {
   box-shadow: 0 0 12px rgba(58,255,195,0.95);
 }
 
+/* TABS --------------------------------------------------*/
+
 .tabs {
   display: flex;
   gap: 12px;
@@ -131,6 +133,8 @@ h1 {
 .tab-panel.active {
   display: block;
 }
+
+/* KPI CARDS --------------------------------------------------*/
 
 .kpi-grid {
   display: grid;
@@ -174,6 +178,8 @@ h1 {
   opacity: 0.7;
 }
 
+/* SECTION CARDS --------------------------------------------------*/
+
 .section-card {
   background: var(--bg-card);
   backdrop-filter: blur(18px);
@@ -208,6 +214,8 @@ canvas {
   gap: 22px;
 }
 
+/* TABLES --------------------------------------------------*/
+
 .table-wrap {
   max-height: 450px;
   overflow-y: auto;
@@ -237,6 +245,8 @@ tbody tr:hover {
   background: rgba(79,139,255,0.18);
 }
 
+/* STATUS BADGES — FIXED FOR GITHUB ------------------------*/
+
 .status-pill {
   padding: 4px 10px;
   border-radius: 12px;
@@ -244,9 +254,22 @@ tbody tr:hover {
   font-weight: 500;
 }
 
-.status-active { background: rgba(58,255,195,0.15); color: var(--success); }
-status-probation { background: rgba(255,206,110,0.15); color: var(--warning); }
-status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
+.status-active {
+  background: rgba(58,255,195,0.15);
+  color: var(--success);
+}
+
+.status-probation {
+  background: rgba(255,206,110,0.15);
+  color: var(--warning);
+}
+
+.status-inactive {
+  background: rgba(255,107,155,0.20);
+  color: var(--danger);
+}
+
+/* TENURE --------------------------------------------------*/
 
 .tenure-grid {
   display: grid;
@@ -291,23 +314,26 @@ status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
     <div class="tab" data-tab="compensation">Compensation</div>
   </div>
 
-  <!-- FIXED KPI GRID — CLEAN -->
+  <!-- CLEAN KPI GRID -->
   <div class="kpi-grid">
     <div class="kpi-card" id="kpiTotalCard">
       <div class="kpi-title">Total Employees</div>
       <div class="kpi-value" id="kpiTotal">0</div>
       <div class="kpi-sub">All Staff</div>
     </div>
+
     <div class="kpi-card" id="kpiActiveCard">
       <div class="kpi-title">Active Employees</div>
       <div class="kpi-value" id="kpiActive">0</div>
       <div class="kpi-sub">Including probation</div>
     </div>
+
     <div class="kpi-card" id="kpiInactiveCard">
       <div class="kpi-title">Inactive Employees</div>
       <div class="kpi-value" id="kpiInactive">0</div>
       <div class="kpi-sub">Attrition: <span id="kpiAttr">0%</span></div>
     </div>
+
     <div class="kpi-card" id="kpiProbCard">
       <div class="kpi-title">On Probation</div>
       <div class="kpi-value" id="kpiProbation">0</div>
@@ -326,14 +352,17 @@ status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
           <div class="kpi-title">New Joiners (&lt; 3 months)</div>
           <div class="tenure-value" id="tenure0_3">0</div>
         </div>
+
         <div class="tenure-card">
           <div class="kpi-title">3 months – 1 year</div>
           <div class="tenure-value" id="tenure3_12">0</div>
         </div>
+
         <div class="tenure-card">
           <div class="kpi-title">1 – 2 years</div>
           <div class="tenure-value" id="tenure12_24">0</div>
         </div>
+
         <div class="tenure-card">
           <div class="kpi-title">2+ years</div>
           <div class="tenure-value" id="tenure24p">0</div>
@@ -437,6 +466,7 @@ status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
 
   <!-- ================= COMPENSATION ================= -->
   <div class="tab-panel" id="tab-compensation">
+
     <div class="section-card">
 
       <div class="section-title">Compensation & Payroll Summary</div>
@@ -506,6 +536,10 @@ status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
 
 </div>
 
+<!-- =======================================================
+     JAVASCRIPT — GITHUB SAFE
+======================================================== -->
+
 <script>
 
 let employees = [];
@@ -513,7 +547,10 @@ let fxRates = { NPR: 1 };
 let charts = {};
 
 const API_URL = "https://hr-api.ashishoct34.workers.dev/api/hr";
-const BASE_CURRENCY = "NPR";
+
+/* =============================================================
+   LOAD HR DATA
+============================================================= */
 
 async function loadHRData() {
   const res = await fetch(API_URL);
@@ -527,7 +564,6 @@ async function loadHRData() {
 function normalizeEmployee(e) {
   const currency = (e.salary_fx || e.salary_currency || "NPR").toUpperCase();
   let salary = e.last_salary || e.salary_npr || 0;
-  salary = Number(salary) || 0;
 
   return {
     id: e.id || "",
@@ -540,95 +576,77 @@ function normalizeEmployee(e) {
     joining_date: e.joining_date || null,
     probation_end: e.probation_end || null,
     dob: e.dob || null,
-
-    status_raw: e.status_raw || "",
-    status_clean: classifyStatus(e),
-
+    status_clean: e.status || "Inactive",
     salary_currency: currency,
-    base_salary: salary
+    base_salary: Number(salary) || 0
   };
 }
 
-function classifyStatus(e) {
-  if (e.status) return e.status;
-  const raw = (e.status_raw || "").toLowerCase();
-  if (raw.includes("❌") || raw.includes("inactive")) return "Inactive";
-  if (raw.includes("prob")) return "Probation";
-  if (raw.includes("active") || raw.includes("✅")) return "Active";
-  return "Inactive";
-}
+/* =============================================================
+   FX LOADER
+============================================================= */
 
 async function loadFxRates(list) {
-  const unique = [...new Set(list)];
   const map = { NPR: 1 };
-
-  for (const code of unique) {
-    if (code === "NPR") {
-      map["NPR"] = 1;
-      continue;
-    }
+  for (const code of list) {
+    if (code === "NPR") { map["NPR"] = 1; continue; }
     try {
       const res = await fetch(`https://api.exchangerate.host/latest?base=${code}&symbols=NPR`);
       const data = await res.json();
       map[code] = data.rates.NPR;
     } catch {
-      map[code] = 0;
+      map[code] = 1;
     }
   }
   return map;
 }
 
-function parseDate(d) {
-  if (!d) return null;
-  const x = new Date(d);
-  return isNaN(x) ? null : x;
-}
+/* =============================================================
+   UTIL
+============================================================= */
 
-function formatDate(d) {
-  if (!d) return "";
-  return new Date(d).toLocaleDateString("en-GB", {
-    day: "2-digit", month: "short", year: "numeric"
-  });
-}
-
+function parseDate(d) { if (!d) return null; const x = new Date(d); return isNaN(x)?null:x; }
+function formatDate(d) { return d ? new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}) : ""; }
 function formatNumber(n) { return Number(n).toLocaleString("en-IN"); }
 
 function salaryNPR(e) {
-  if (e.salary_npr && e.salary_npr > 0) return e.salary_npr;
   return e.base_salary * (fxRates[e.salary_currency] || 1);
 }
+
+/* =============================================================
+   KPIs
+============================================================= */
 
 function renderKPIs() {
   const active = employees.filter(e => e.status_clean === "Active" || e.status_clean === "Probation");
   const inactive = employees.filter(e => e.status_clean === "Inactive");
   const prob = employees.filter(e => e.status_clean === "Probation");
-  const total = employees.length || 1;
-  const attr = (inactive.length / total) * 100;
 
   document.getElementById("kpiTotal").innerText = employees.length;
   document.getElementById("kpiActive").innerText = active.length;
   document.getElementById("kpiInactive").innerText = inactive.length;
   document.getElementById("kpiProbation").innerText = prob.length;
+
+  const attr = employees.length ? (inactive.length / employees.length) * 100 : 0;
   document.getElementById("kpiAttr").innerText = attr.toFixed(1) + "%";
 }
+
+/* =============================================================
+   TENURE LOGIC
+============================================================= */
 
 function calcTenureMonths(joinDateStr) {
   const join = parseDate(joinDateStr);
   if (!join) return null;
-
   const now = new Date();
-  const years = now.getFullYear() - join.getFullYear();
-  const months = now.getMonth() - join.getMonth();
-  return years * 12 + months;
+  return (now.getFullYear() - join.getFullYear()) * 12 + (now.getMonth() - join.getMonth());
 }
 
 function renderTenureCards() {
-  let t0 = 0, t3 = 0, t12 = 0, t24 = 0;
-
+  let t0=0,t3=0,t12=0,t24=0;
   employees.forEach(e => {
     const t = calcTenureMonths(e.joining_date);
-    if (t == null || t < 0) return;
-
+    if (t == null || t<0) return;
     if (t < 3) t0++;
     else if (t < 12) t3++;
     else if (t < 24) t12++;
@@ -640,37 +658,36 @@ function renderTenureCards() {
   document.getElementById("tenure12_24").innerText = t12;
   document.getElementById("tenure24p").innerText = t24;
 
-  renderTenureChart([t0, t3, t12, t24]);
+  renderTenureChart([t0,t3,t12,t24]);
 }
 
 function renderTenureChart(vals) {
   if (charts.tenure) charts.tenure.destroy();
-
   charts.tenure = new Chart(document.getElementById("tenureChart"), {
     type: "bar",
     data: {
-      labels: ["<3m", "3m–1y", "1–2y", "2+y"],
-      datasets: [{
-        data: vals,
-        backgroundColor: ["#4f8bff", "#7f9cff", "#ff6b9b", "#ffce6e"],
-        borderWidth: 0
-      }]
+      labels:["<3m","3m–1y","1–2y","2+y"],
+      datasets:[{ data: vals, backgroundColor:["#4f8bff","#7f9cff","#ff6b9b","#ffce6e"], borderWidth:0 }]
     },
-    options: {
-      plugins: { legend: { display: false }},
-      scales: {
-        x: { ticks: { color:"#ddd" }, grid: { display:false }},
-        y: { ticks: { color:"#ddd" }, grid: { color:"rgba(255,255,255,0.08)" }}
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:"#ddd"},grid:{display:false}},
+        y:{ticks:{color:"#ddd"},grid:{color:"rgba(255,255,255,0.08)"}}
       }
     }
   });
 }
 
+/* =============================================================
+   COMPOSITION CHARTS
+============================================================= */
+
 function countBy(list, fn) {
-  const map = {};
-  list.forEach(e => {
+  const map={};
+  list.forEach(e=>{
     const k = fn(e);
-    map[k] = (map[k] || 0) + 1;
+    map[k] = (map[k]||0)+1;
   });
   return map;
 }
@@ -678,13 +695,10 @@ function countBy(list, fn) {
 function ageGroup(e) {
   const d = parseDate(e.dob);
   if (!d) return "Unknown";
-
   const now = new Date();
-  let age = now.getFullYear() - d.getFullYear();
-
-  const m = now.getMonth() - d.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
-
+  let age = now.getFullYear()-d.getFullYear();
+  const m = now.getMonth()-d.getMonth();
+  if (m<0 || (m===0 && now.getDate()<d.getDate())) age--;
   if (age < 25) return "Under 25";
   if (age < 35) return "25–34";
   if (age < 45) return "35–44";
@@ -694,103 +708,76 @@ function ageGroup(e) {
 
 function renderOverviewCharts() {
 
-  const deptMap = countBy(employees, e => e.department);
-  const dLabels = Object.keys(deptMap);
-  const dVals = Object.values(deptMap);
-
+  /* DEPARTMENT */
+  const deptMap = countBy(employees, e=>e.department);
   if (charts.dept) charts.dept.destroy();
   charts.dept = new Chart(document.getElementById("deptChart"), {
-    type: "bar",
-    data: { labels: dLabels, datasets: [{ data: dVals, backgroundColor:"#4f8bff" }]},
-    options: {
-      plugins: { legend: { display:false }},
-      scales: {
-        x: { ticks: { color:"#ccc" }, grid:{ display:false }},
-        y: { ticks: { color:"#ccc" }, grid:{ color:"rgba(255,255,255,0.08)" }}
-      }
-    }
+    type:"bar",
+    data:{labels:Object.keys(deptMap),datasets:[{data:Object.values(deptMap),backgroundColor:"#4f8bff"}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:"#ccc"},grid:{display:false}},y:{ticks:{color:"#ccc"},grid:{color:"rgba(255,255,255,0.08)"}}}
   });
 
-  const genderMap = countBy(employees, e => e.gender);
-  const gLabels = Object.keys(genderMap);
-  const gVals = Object.values(genderMap);
-
+  /* GENDER */
+  const genderMap = countBy(employees, e=>e.gender);
   if (charts.gender) charts.gender.destroy();
   charts.gender = new Chart(document.getElementById("genderChart"), {
-    type: "doughnut",
-    data: {
-      labels: gLabels,
-      datasets: [{
-        data: gVals,
-        backgroundColor: ["#4f8bff","#ff6b9b","#ffce6e","#7f9cff"],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      plugins: { legend: { labels: { color:"#ccc" }}}
-    }
+    type:"doughnut",
+    data:{labels:Object.keys(genderMap),datasets:[{data:Object.values(genderMap),backgroundColor:["#4f8bff","#ff6b9b","#ffce6e","#7f9cff"],borderWidth:0}]},
+    options:{plugins:{legend:{labels:{color:"#ccc"}}}}
   });
 
-  const ageMap = countBy(employees, e => ageGroup(e));
-  const aLabels = Object.keys(ageMap);
-  const aVals = Object.values(ageMap);
-
+  /* AGE */
+  const ageMap = countBy(employees, ageGroup);
   if (charts.age) charts.age.destroy();
   charts.age = new Chart(document.getElementById("ageChart"), {
-    type: "bar",
-    data: {
-      labels: aLabels,
-      datasets: [{
-        data: aVals,
-        backgroundColor:"#ff6b9b"
-      }]
-    },
-    options: {
-      plugins: { legend: { display:false }},
-      scales: {
-        x: { ticks: { color:"#ccc" }, grid:{ display:false }},
-        y: { ticks: { color:"#ccc" }, grid:{ color:"rgba(255,255,255,0.08)" }}
-      }
-    }
+    type:"bar",
+    data:{labels:Object.keys(ageMap),datasets:[{data:Object.values(ageMap),backgroundColor:"#ff6b9b"}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:"#ccc"},grid:{display:false}},y:{ticks:{color:"#ccc"},grid:{color:"rgba(255,255,255,0.08)"}}}
   });
 
   renderProbationTable();
 }
 
+/* =============================================================
+   PROBATION TABLE
+============================================================= */
+
 function renderProbationTable() {
   const tbody = document.getElementById("probationTableBody");
-  tbody.innerHTML = "";
+  tbody.innerHTML="";
 
   const now = new Date();
 
   const list = employees
-    .filter(e => e.status_clean === "Probation")
-    .map(e => {
-      const end = parseDate(e.probation_end);
-      const daysLeft = end ? Math.ceil((end - now) / (1000*60*60*24)) : null;
-      return { e, end, daysLeft };
+    .filter(e=>e.status_clean==="Probation")
+    .map(e=>{
+      const end=parseDate(e.probation_end);
+      const days = end ? Math.ceil((end-now)/(1000*60*60*24)) : null;
+      return {e,end,days};
     })
-    .filter(x => x.daysLeft !== null && x.daysLeft >= 0 && x.daysLeft <= 30)
-    .sort((a,b) => a.daysLeft - b.daysLeft);
+    .filter(x=>x.days!=null && x.days>=0 && x.days<=30)
+    .sort((a,b)=>a.days-b.days);
 
   if (!list.length) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">No probation ending soon</td>`;
-    tbody.appendChild(tr);
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">No probation ending soon</td></tr>`;
     return;
   }
 
-  list.forEach(x => {
-    const tr = document.createElement("tr");
+  list.forEach(x=>{
+    const tr=document.createElement("tr");
     tr.innerHTML = `
       <td>${x.e.name}</td>
       <td>${x.e.department}</td>
       <td>${formatDate(x.e.probation_end)}</td>
-      <td>${x.daysLeft}</td>
+      <td>${x.days}</td>
     `;
     tbody.appendChild(tr);
   });
 }
+
+/* =============================================================
+   PEOPLE FILTERS
+============================================================= */
 
 function setupPeopleFilters() {
   document.getElementById("searchInput").oninput = applyPeopleFilters;
@@ -800,22 +787,19 @@ function setupPeopleFilters() {
 }
 
 function buildPeopleFilters() {
-  const deptSel = document.getElementById("filterDept");
-  const countrySel = document.getElementById("filterCountry");
-
-  const depts = [...new Set(employees.map(e => e.department).filter(Boolean))].sort();
-  depts.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d;
-    opt.innerText = d;
+  const deptSel=document.getElementById("filterDept");
+  const deps=[...new Set(employees.map(e=>e.department).filter(Boolean))].sort();
+  deps.forEach(d=>{
+    const opt=document.createElement("option");
+    opt.value=d; opt.innerText=d;
     deptSel.appendChild(opt);
   });
 
-  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
-  countries.forEach(c => {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.innerText = c;
+  const countrySel=document.getElementById("filterCountry");
+  const countries=[...new Set(employees.map(e=>e.country).filter(Boolean))].sort();
+  countries.forEach(c=>{
+    const opt=document.createElement("option");
+    opt.value=c; opt.innerText=c;
     countrySel.appendChild(opt);
   });
 }
@@ -828,18 +812,16 @@ function applyPeopleFilters() {
 
   let list = employees.slice();
 
-  list = list.filter(e => {
-    let ok = true;
-
-    if (fs) ok = ok && e.status_clean === fs;
-    if (fd) ok = ok && e.department === fd;
-    if (fc) ok = ok && e.country === fc;
+  list = list.filter(e=>{
+    let ok=true;
+    if (fs) ok = ok && e.status_clean===fs;
+    if (fd) ok = ok && e.department===fd;
+    if (fc) ok = ok && e.country===fc;
 
     if (search) {
-      const blob = (e.name + " " + e.designation + " " + e.department).toLowerCase();
+      const blob = (e.name+" "+e.designation+" "+e.department).toLowerCase();
       ok = ok && blob.includes(search);
     }
-
     return ok;
   });
 
@@ -847,18 +829,17 @@ function applyPeopleFilters() {
 }
 
 function renderPeopleTable(list) {
-  const tbody = document.getElementById("employeeTableBody");
-  tbody.innerHTML = "";
+  const tbody=document.getElementById("employeeTableBody");
+  tbody.innerHTML="";
 
   if (!list.length) {
-    tbody.innerHTML =
-      `<tr><td colspan="10" style="text-align:center; padding:14px; opacity:0.6;">No employees found</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="10" style="text-align:center; padding:14px; opacity:0.6;">No employees found</td></tr>`;
     return;
   }
 
-  list.forEach(e => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+  list.forEach(e=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
       <td>${e.id}</td>
       <td>${e.name}</td>
       <td>${e.designation}</td>
@@ -875,106 +856,90 @@ function renderPeopleTable(list) {
 }
 
 function badgeStatus(st) {
-  if (st === "Active") return `<span class="status-pill status-active">Active</span>`;
-  if (st === "Probation") return `<span class="status-pill status-probation">Probation</span>`;
+  if (st==="Active") return `<span class="status-pill status-active">Active</span>`;
+  if (st==="Probation") return `<span class="status-pill status-probation">Probation</span>`;
   return `<span class="status-pill status-inactive">Inactive</span>`;
 }
 
-function buildCompCountryFilter() {
-  const sel = document.getElementById("compCountry");
-  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
+/* =============================================================
+   COMPENSATION
+============================================================= */
 
-  countries.forEach(c => {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.innerText = c;
+function buildCompCountryFilter() {
+  const sel=document.getElementById("compCountry");
+  const countries=[...new Set(employees.map(e=>e.country).filter(Boolean))].sort();
+  countries.forEach(c=>{
+    const opt=document.createElement("option");
+    opt.value=c; opt.innerText=c;
     sel.appendChild(opt);
   });
-
-  sel.onchange = () => renderCompensation();
+  sel.onchange=()=>renderCompensation();
 }
 
 function renderCompensation() {
-  const fc = document.getElementById("compCountry").value;
+  const fc=document.getElementById("compCountry").value;
 
-  let list = employees.slice();
-  if (fc) list = list.filter(e => e.country === fc);
+  let list=employees.slice();
+  if (fc) list=list.filter(e=>e.country===fc);
 
-  const total = list.reduce((s,e) => s + salaryNPR(e), 0);
-  const avg = list.length ? total / list.length : 0;
+  const total=list.reduce((s,e)=>s+salaryNPR(e),0);
+  const avg=list.length?total/list.length:0;
 
-  document.getElementById("totalPayrollNPR").innerText = formatNumber(total);
-  document.getElementById("avgSalaryNPR").innerText = formatNumber(avg);
+  document.getElementById("totalPayrollNPR").innerText=formatNumber(total);
+  document.getElementById("avgSalaryNPR").innerText=formatNumber(avg);
 
   renderCurrencyCards(list);
   renderCountryPayrollTable();
 }
 
 function renderCurrencyCards(list) {
-  const wrap = document.getElementById("currencyCards");
-  wrap.innerHTML = "";
+  const wrap=document.getElementById("currencyCards");
+  wrap.innerHTML="";
 
-  const map = {};
+  const map={};
 
-  list.forEach(e => {
+  list.forEach(e=>{
     if (!map[e.salary_currency]) {
-      map[e.salary_currency] = { count: 0, total: 0, rate: fxRates[e.salary_currency] };
+      map[e.salary_currency]={count:0,total:0,rate:fxRates[e.salary_currency]};
     }
     map[e.salary_currency].count++;
-    map[e.salary_currency].total += e.base_salary;
+    map[e.salary_currency].total+=e.base_salary;
   });
 
-  Object.keys(map).forEach(cur => {
-    const obj = map[cur];
-
-    const div = document.createElement("div");
-    div.style = `
-      padding:14px; margin-bottom:10px;
-      background:rgba(255,255,255,0.08);
-      border:var(--border-soft);
-      border-radius:12px;
-    `;
-    div.innerHTML = `
+  Object.keys(map).forEach(cur=>{
+    const obj=map[cur];
+    const div=document.createElement("div");
+    div.style=`padding:14px; margin-bottom:10px; background:rgba(255,255,255,0.08); border:var(--border-soft); border-radius:12px;`;
+    div.innerHTML=`
       <div style="font-size:15px; font-weight:600;">${cur}</div>
       <div style="font-size:13px; margin-top:4px;">Employees: ${obj.count}</div>
-      <div style="font-size:13px; margin-top:4px;">
-        Total: ${formatNumber(obj.total)} ${cur}
-      </div>
+      <div style="font-size:13px; margin-top:4px;">Total: ${formatNumber(obj.total)} ${cur}</div>
       <div style="font-size:12px; opacity:0.7; margin-top:4px;">FX → NPR: ${obj.rate}</div>
-      <div style="font-size:14px; margin-top:6px; font-weight:600;">
-        NPR: ${formatNumber(obj.total * obj.rate)}
-      </div>
+      <div style="font-size:14px; margin-top:6px; font-weight:600;">NPR: ${formatNumber(obj.total*obj.rate)}</div>
     `;
     wrap.appendChild(div);
   });
 }
 
 function renderCountryPayrollTable() {
-  const tbody = document.getElementById("countryPayrollBody");
-  tbody.innerHTML = "";
+  const tbody=document.getElementById("countryPayrollBody");
+  tbody.innerHTML="";
 
-  const map = {};
-
-  employees.forEach(e => {
-    if (!map[e.country]) map[e.country] = { count: 0, total: 0 };
+  const map={};
+  employees.forEach(e=>{
+    if (!map[e.country]) map[e.country]={count:0,total:0};
     map[e.country].count++;
-    map[e.country].total += salaryNPR(e);
+    map[e.country].total+=salaryNPR(e);
   });
 
-  const list = Object.keys(map).map(k => ({
-    country: k,
-    count: map[k].count,
-    total: map[k].total
-  })).sort((a,b) => b.total - a.total);
+  const list=Object.keys(map).map(k=>({country:k,count:map[k].count,total:map[k].total})).sort((a,b)=>b.total-a.total);
 
-  document.getElementById("topCountryName").innerText =
-    list.length ? list[0].country : "–";
-  document.getElementById("topCountryVal").innerText =
-    list.length ? formatNumber(list[0].total) + " NPR" : "";
+  document.getElementById("topCountryName").innerText= list.length?list[0].country:"–";
+  document.getElementById("topCountryVal").innerText= list.length?formatNumber(list[0].total)+" NPR":"";
 
-  list.forEach(x => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+  list.forEach(x=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
       <td>${x.country}</td>
       <td>${x.count}</td>
       <td>${formatNumber(x.total)}</td>
@@ -983,43 +948,47 @@ function renderCountryPayrollTable() {
   });
 }
 
+/* =============================================================
+   TAB SWITCHING
+============================================================= */
+
 function setupTabs() {
   document.querySelectorAll(".tab").forEach(t => {
     t.onclick = () => {
-      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
-      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
       t.classList.add("active");
-      document.getElementById("tab-" + t.dataset.tab).classList.add("active");
+      document.getElementById("tab-"+t.dataset.tab).classList.add("active");
     };
   });
 }
 
+/* KPI CARD DRILLDOWN ---------------------------------------*/
+
 function setupDrilldowns() {
-  document.getElementById("kpiTotalCard").onclick = () => {
+  document.getElementById("kpiTotalCard").onclick = ()=>{
     switchTab("people");
-    document.getElementById("filterStatus").value = "";
-    document.getElementById("filterDept").value = "";
-    document.getElementById("filterCountry").value = "";
-    document.getElementById("searchInput").value = "";
+    resetFilters();
+  };
+
+  document.getElementById("kpiActiveCard").onclick = ()=>{
+    switchTab("people");
+    resetFilters();
+    document.getElementById("filterStatus").value="Active";
     applyPeopleFilters();
   };
 
-  document.getElementById("kpiActiveCard").onclick = () => {
+  document.getElementById("kpiInactiveCard").onclick = ()=>{
     switchTab("people");
-    document.getElementById("filterStatus").value = "Active";
+    resetFilters();
+    document.getElementById("filterStatus").value="Inactive";
     applyPeopleFilters();
   };
 
-  document.getElementById("kpiInactiveCard").onclick = () => {
+  document.getElementById("kpiProbCard").onclick = ()=>{
     switchTab("people");
-    document.getElementById("filterStatus").value = "Inactive";
-    applyPeopleFilters();
-  };
-
-  document.getElementById("kpiProbCard").onclick = () => {
-    switchTab("people");
-    document.getElementById("filterStatus").value = "Probation";
+    resetFilters();
+    document.getElementById("filterStatus").value="Probation";
     applyPeopleFilters();
   };
 }
@@ -1027,10 +996,20 @@ function setupDrilldowns() {
 function switchTab(key) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   document.querySelectorAll(".tab-panel").forEach(t => t.classList.remove("active"));
-
   document.querySelector(`.tab[data-tab='${key}']`).classList.add("active");
-  document.getElementById("tab-" + key).classList.add("active");
+  document.getElementById("tab-"+key).classList.add("active");
 }
+
+function resetFilters() {
+  document.getElementById("filterStatus").value="";
+  document.getElementById("filterDept").value="";
+  document.getElementById("filterCountry").value="";
+  document.getElementById("searchInput").value="";
+}
+
+/* =============================================================
+   INIT
+============================================================= */
 
 async function init() {
   await loadHRData();
