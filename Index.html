@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HR Analytics Dashboard – Premium Glass Neon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* ============================================================
+   PREMIUM GLASS + NEON THEME
+============================================================ */
+
+:root {
+  --bg-main: #050612;
+  --bg-card: rgba(17, 21, 40, 0.72);
+  --bg-glass: rgba(255,255,255,0.06);
+  --bg-hover: rgba(255,255,255,0.12);
+
+  --border-soft: 1px solid rgba(255,255,255,0.09);
+  --border-glow: 1px solid rgba(79,139,255,0.55);
+
+  --text-main: #eef2ff;
+  --text-muted: #9ca3c9;
+
+  --accent: #4f8bff;
+  --accent-glow: 0 0 16px rgba(79,139,255,0.65);
+
+  --success: #3affc3;
+  --warning: #ffce6e;
+  --danger: #ff6b9b;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 10px 26px rgba(0,0,0,0.45);
+  --shadow-card: 0 16px 32px rgba(0,0,0,0.6);
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top left, #10142a 0%, #050612 60%, #000 100%);
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text-main);
+}
+
+.shell {
+  max-width: 1400px;
+  margin: auto;
+  padding: 28px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.14);
+}
+
+.sub-title {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+
+  background: rgba(79,139,255,0.12);
+  border: 1px solid rgba(79,139,255,0.45);
+
+  color: #90b7ff;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(58,255,195,0.95);
+}
+
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.tab {
+  padding: 9px 22px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border: var(--border-soft);
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(6px);
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--accent-glow);
+  border: none;
+}
+
+.tab-panel {
+  display: none;
+  margin-top: 26px;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.kpi-card {
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  transition: 0.28s;
+  cursor: pointer;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-card), var(--accent-glow);
+  border: var(--border-glow);
+}
+
+.kpi-title {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.kpi-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.section-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  border: var(--border-soft);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+canvas {
+  width: 100% !important;
+  height: 260px !important;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 22px;
+}
+
+.stack-2 {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 22px;
+}
+
+.table-wrap {
+  max-height: 450px;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  border: var(--border-soft);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: rgba(255,255,255,0.06);
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: rgba(79,139,255,0.18);
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-active { background: rgba(58,255,195,0.15); color: var(--success); }
+status-probation { background: rgba(255,206,110,0.15); color: var(--warning); }
+status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
+
+.tenure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.tenure-card {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.06);
+  border: var(--border-soft);
+  backdrop-filter: blur(14px);
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.tenure-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <h1>HR Analytics Dashboard</h1>
+  <div class="sub-title">Premium Glass Neon Edition · Live Notion + Cloudflare + FX</div>
+
+  <div class="live-pill">
+    <div class="live-dot"></div>
+    LIVE DATA FEED · FX SYNC
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="people">People</div>
+    <div class="tab" data-tab="compensation">Compensation</div>
+  </div>
+
+  <!-- FIXED KPI GRID — CLEAN -->
+  <div class="kpi-grid">
+    <div class="kpi-card" id="kpiTotalCard">
+      <div class="kpi-title">Total Employees</div>
+      <div class="kpi-value" id="kpiTotal">0</div>
+      <div class="kpi-sub">All Staff</div>
+    </div>
+    <div class="kpi-card" id="kpiActiveCard">
+      <div class="kpi-title">Active Employees</div>
+      <div class="kpi-value" id="kpiActive">0</div>
+      <div class="kpi-sub">Including probation</div>
+    </div>
+    <div class="kpi-card" id="kpiInactiveCard">
+      <div class="kpi-title">Inactive Employees</div>
+      <div class="kpi-value" id="kpiInactive">0</div>
+      <div class="kpi-sub">Attrition: <span id="kpiAttr">0%</span></div>
+    </div>
+    <div class="kpi-card" id="kpiProbCard">
+      <div class="kpi-title">On Probation</div>
+      <div class="kpi-value" id="kpiProbation">0</div>
+      <div class="kpi-sub">Ending soon</div>
+    </div>
+  </div>
+
+  <!-- ================= OVERVIEW ================= -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <div class="section-card">
+      <div class="section-title">Employee Tenure Summary</div>
+
+      <div class="tenure-grid">
+        <div class="tenure-card">
+          <div class="kpi-title">New Joiners (&lt; 3 months)</div>
+          <div class="tenure-value" id="tenure0_3">0</div>
+        </div>
+        <div class="tenure-card">
+          <div class="kpi-title">3 months – 1 year</div>
+          <div class="tenure-value" id="tenure3_12">0</div>
+        </div>
+        <div class="tenure-card">
+          <div class="kpi-title">1 – 2 years</div>
+          <div class="tenure-value" id="tenure12_24">0</div>
+        </div>
+        <div class="tenure-card">
+          <div class="kpi-title">2+ years</div>
+          <div class="tenure-value" id="tenure24p">0</div>
+        </div>
+      </div>
+
+      <div style="margin-top:28px;">
+        <canvas id="tenureChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Workforce Composition</div>
+
+      <div class="overview-grid">
+        <div>
+          <div class="kpi-title">Department Distribution</div>
+          <canvas id="deptChart"></canvas>
+        </div>
+
+        <div class="stack-2">
+          <div>
+            <div class="kpi-title">Gender Split</div>
+            <canvas id="genderChart"></canvas>
+          </div>
+          <div>
+            <div class="kpi-title">Age Groups</div>
+            <canvas id="ageChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Probation Ending Within 30 Days</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Probation End</th>
+              <th>Days Left</th>
+            </tr>
+          </thead>
+          <tbody id="probationTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= PEOPLE ================= -->
+  <div class="tab-panel" id="tab-people">
+
+    <div class="section-card">
+      <div class="section-title">Employee Master List</div>
+
+      <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+        <input id="searchInput" placeholder="Search by name, ID, designation..."
+        style="flex:1; padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); color:white; font-size:13px;">
+
+        <select id="filterStatus" style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); color:white;">
+          <option value="">Status: All</option>
+          <option value="Active">Active</option>
+          <option value="Probation">Probation</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <select id="filterDept"
+        style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); color:white;">
+          <option value="">Department: All</option>
+        </select>
+
+        <select id="filterCountry"
+        style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Designation</th><th>Department</th>
+              <th>Country</th><th>Status</th><th>Joining</th><th>Probation End</th>
+              <th>Salary</th><th>Currency</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= COMPENSATION ================= -->
+  <div class="tab-panel" id="tab-compensation">
+    <div class="section-card">
+
+      <div class="section-title">Compensation & Payroll Summary</div>
+
+      <div style="margin-bottom:20px;">
+        <select id="compCountry"
+        style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+      </div>
+
+      <div class="overview-grid" style="grid-template-columns:1.2fr 1fr; gap:26px;">
+
+        <div>
+
+          <div style="padding:20px; border-radius:16px; background:rgba(255,255,255,0.06);
+          border:var(--border-soft); box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Total Payroll (NPR)</h3>
+            <div id="totalPayrollNPR"
+            style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div style="margin-top:16px; padding:20px; border-radius:16px;
+          background:rgba(255,255,255,0.06); border:var(--border-soft);
+          box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Average Salary (NPR)</h3>
+            <div id="avgSalaryNPR"
+            style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div style="margin-top:16px; padding:20px; border-radius:16px;
+          background:rgba(255,255,255,0.06); border:var(--border-soft);
+          box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Top Paying Country</h3>
+            <div id="topCountryName" style="font-size:22px; margin-top:4px;">–</div>
+            <div id="topCountryVal"
+            style="font-size:14px; margin-top:4px; color:var(--text-muted);"></div>
+          </div>
+
+          <div style="margin-top:16px; padding:20px; border-radius:16px;
+          background:rgba(255,255,255,0.06); border:var(--border-soft);
+          box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Currency-wise Payroll</h3>
+            <div id="currencyCards" style="margin-top:14px;"></div>
+          </div>
+
+        </div>
+
+        <div style="padding:20px; border-radius:16px; background:rgba(255,255,255,0.06);
+        border:var(--border-soft); box-shadow:var(--shadow-soft);">
+          <h3 style="margin:0; font-size:18px;">Country-wise Payroll (NPR)</h3>
+
+          <div class="table-wrap" style="margin-top:14px; max-height:390px;">
+            <table>
+              <thead>
+                <tr><th>Country</th><th>Employees</th><th>Total Payroll</th></tr>
+              </thead>
+              <tbody id="countryPayrollBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+let employees = [];
+let fxRates = { NPR: 1 };
+let charts = {};
+
+const API_URL = "https://hr-api.ashishoct34.workers.dev/api/hr";
+const BASE_CURRENCY = "NPR";
+
+async function loadHRData() {
+  const res = await fetch(API_URL);
+  const json = await res.json();
+  employees = json.employees.map(e => normalizeEmployee(e));
+
+  const curList = [...new Set(employees.map(e => e.salary_currency).filter(Boolean))];
+  fxRates = await loadFxRates(curList);
+}
+
+function normalizeEmployee(e) {
+  const currency = (e.salary_fx || e.salary_currency || "NPR").toUpperCase();
+  let salary = e.last_salary || e.salary_npr || 0;
+  salary = Number(salary) || 0;
+
+  return {
+    id: e.id || "",
+    name: e.name || "",
+    department: e.department || "Unknown",
+    designation: e.designation || "",
+    gender: e.gender || "Unknown",
+    education: e.education || "",
+    country: e.country || "",
+    joining_date: e.joining_date || null,
+    probation_end: e.probation_end || null,
+    dob: e.dob || null,
+
+    status_raw: e.status_raw || "",
+    status_clean: classifyStatus(e),
+
+    salary_currency: currency,
+    base_salary: salary
+  };
+}
+
+function classifyStatus(e) {
+  if (e.status) return e.status;
+  const raw = (e.status_raw || "").toLowerCase();
+  if (raw.includes("❌") || raw.includes("inactive")) return "Inactive";
+  if (raw.includes("prob")) return "Probation";
+  if (raw.includes("active") || raw.includes("✅")) return "Active";
+  return "Inactive";
+}
+
+async function loadFxRates(list) {
+  const unique = [...new Set(list)];
+  const map = { NPR: 1 };
+
+  for (const code of unique) {
+    if (code === "NPR") {
+      map["NPR"] = 1;
+      continue;
+    }
+    try {
+      const res = await fetch(`https://api.exchangerate.host/latest?base=${code}&symbols=NPR`);
+      const data = await res.json();
+      map[code] = data.rates.NPR;
+    } catch {
+      map[code] = 0;
+    }
+  }
+  return map;
+}
+
+function parseDate(d) {
+  if (!d) return null;
+  const x = new Date(d);
+  return isNaN(x) ? null : x;
+}
+
+function formatDate(d) {
+  if (!d) return "";
+  return new Date(d).toLocaleDateString("en-GB", {
+    day: "2-digit", month: "short", year: "numeric"
+  });
+}
+
+function formatNumber(n) { return Number(n).toLocaleString("en-IN"); }
+
+function salaryNPR(e) {
+  if (e.salary_npr && e.salary_npr > 0) return e.salary_npr;
+  return e.base_salary * (fxRates[e.salary_currency] || 1);
+}
+
+function renderKPIs() {
+  const active = employees.filter(e => e.status_clean === "Active" || e.status_clean === "Probation");
+  const inactive = employees.filter(e => e.status_clean === "Inactive");
+  const prob = employees.filter(e => e.status_clean === "Probation");
+  const total = employees.length || 1;
+  const attr = (inactive.length / total) * 100;
+
+  document.getElementById("kpiTotal").innerText = employees.length;
+  document.getElementById("kpiActive").innerText = active.length;
+  document.getElementById("kpiInactive").innerText = inactive.length;
+  document.getElementById("kpiProbation").innerText = prob.length;
+  document.getElementById("kpiAttr").innerText = attr.toFixed(1) + "%";
+}
+
+function calcTenureMonths(joinDateStr) {
+  const join = parseDate(joinDateStr);
+  if (!join) return null;
+
+  const now = new Date();
+  const years = now.getFullYear() - join.getFullYear();
+  const months = now.getMonth() - join.getMonth();
+  return years * 12 + months;
+}
+
+function renderTenureCards() {
+  let t0 = 0, t3 = 0, t12 = 0, t24 = 0;
+
+  employees.forEach(e => {
+    const t = calcTenureMonths(e.joining_date);
+    if (t == null || t < 0) return;
+
+    if (t < 3) t0++;
+    else if (t < 12) t3++;
+    else if (t < 24) t12++;
+    else t24++;
+  });
+
+  document.getElementById("tenure0_3").innerText = t0;
+  document.getElementById("tenure3_12").innerText = t3;
+  document.getElementById("tenure12_24").innerText = t12;
+  document.getElementById("tenure24p").innerText = t24;
+
+  renderTenureChart([t0, t3, t12, t24]);
+}
+
+function renderTenureChart(vals) {
+  if (charts.tenure) charts.tenure.destroy();
+
+  charts.tenure = new Chart(document.getElementById("tenureChart"), {
+    type: "bar",
+    data: {
+      labels: ["<3m", "3m–1y", "1–2y", "2+y"],
+      datasets: [{
+        data: vals,
+        backgroundColor: ["#4f8bff", "#7f9cff", "#ff6b9b", "#ffce6e"],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }},
+      scales: {
+        x: { ticks: { color:"#ddd" }, grid: { display:false }},
+        y: { ticks: { color:"#ddd" }, grid: { color:"rgba(255,255,255,0.08)" }}
+      }
+    }
+  });
+}
+
+function countBy(list, fn) {
+  const map = {};
+  list.forEach(e => {
+    const k = fn(e);
+    map[k] = (map[k] || 0) + 1;
+  });
+  return map;
+}
+
+function ageGroup(e) {
+  const d = parseDate(e.dob);
+  if (!d) return "Unknown";
+
+  const now = new Date();
+  let age = now.getFullYear() - d.getFullYear();
+
+  const m = now.getMonth() - d.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+
+  if (age < 25) return "Under 25";
+  if (age < 35) return "25–34";
+  if (age < 45) return "35–44";
+  if (age < 55) return "45–54";
+  return "55+";
+}
+
+function renderOverviewCharts() {
+
+  const deptMap = countBy(employees, e => e.department);
+  const dLabels = Object.keys(deptMap);
+  const dVals = Object.values(deptMap);
+
+  if (charts.dept) charts.dept.destroy();
+  charts.dept = new Chart(document.getElementById("deptChart"), {
+    type: "bar",
+    data: { labels: dLabels, datasets: [{ data: dVals, backgroundColor:"#4f8bff" }]},
+    options: {
+      plugins: { legend: { display:false }},
+      scales: {
+        x: { ticks: { color:"#ccc" }, grid:{ display:false }},
+        y: { ticks: { color:"#ccc" }, grid:{ color:"rgba(255,255,255,0.08)" }}
+      }
+    }
+  });
+
+  const genderMap = countBy(employees, e => e.gender);
+  const gLabels = Object.keys(genderMap);
+  const gVals = Object.values(genderMap);
+
+  if (charts.gender) charts.gender.destroy();
+  charts.gender = new Chart(document.getElementById("genderChart"), {
+    type: "doughnut",
+    data: {
+      labels: gLabels,
+      datasets: [{
+        data: gVals,
+        backgroundColor: ["#4f8bff","#ff6b9b","#ffce6e","#7f9cff"],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      plugins: { legend: { labels: { color:"#ccc" }}}
+    }
+  });
+
+  const ageMap = countBy(employees, e => ageGroup(e));
+  const aLabels = Object.keys(ageMap);
+  const aVals = Object.values(ageMap);
+
+  if (charts.age) charts.age.destroy();
+  charts.age = new Chart(document.getElementById("ageChart"), {
+    type: "bar",
+    data: {
+      labels: aLabels,
+      datasets: [{
+        data: aVals,
+        backgroundColor:"#ff6b9b"
+      }]
+    },
+    options: {
+      plugins: { legend: { display:false }},
+      scales: {
+        x: { ticks: { color:"#ccc" }, grid:{ display:false }},
+        y: { ticks: { color:"#ccc" }, grid:{ color:"rgba(255,255,255,0.08)" }}
+      }
+    }
+  });
+
+  renderProbationTable();
+}
+
+function renderProbationTable() {
+  const tbody = document.getElementById("probationTableBody");
+  tbody.innerHTML = "";
+
+  const now = new Date();
+
+  const list = employees
+    .filter(e => e.status_clean === "Probation")
+    .map(e => {
+      const end = parseDate(e.probation_end);
+      const daysLeft = end ? Math.ceil((end - now) / (1000*60*60*24)) : null;
+      return { e, end, daysLeft };
+    })
+    .filter(x => x.daysLeft !== null && x.daysLeft >= 0 && x.daysLeft <= 30)
+    .sort((a,b) => a.daysLeft - b.daysLeft);
+
+  if (!list.length) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">No probation ending soon</td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+
+  list.forEach(x => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${x.e.name}</td>
+      <td>${x.e.department}</td>
+      <td>${formatDate(x.e.probation_end)}</td>
+      <td>${x.daysLeft}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function setupPeopleFilters() {
+  document.getElementById("searchInput").oninput = applyPeopleFilters;
+  document.getElementById("filterStatus").onchange = applyPeopleFilters;
+  document.getElementById("filterDept").onchange = applyPeopleFilters;
+  document.getElementById("filterCountry").onchange = applyPeopleFilters;
+}
+
+function buildPeopleFilters() {
+  const deptSel = document.getElementById("filterDept");
+  const countrySel = document.getElementById("filterCountry");
+
+  const depts = [...new Set(employees.map(e => e.department).filter(Boolean))].sort();
+  depts.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.innerText = d;
+    deptSel.appendChild(opt);
+  });
+
+  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
+  countries.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.innerText = c;
+    countrySel.appendChild(opt);
+  });
+}
+
+function applyPeopleFilters() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const fs = document.getElementById("filterStatus").value;
+  const fd = document.getElementById("filterDept").value;
+  const fc = document.getElementById("filterCountry").value;
+
+  let list = employees.slice();
+
+  list = list.filter(e => {
+    let ok = true;
+
+    if (fs) ok = ok && e.status_clean === fs;
+    if (fd) ok = ok && e.department === fd;
+    if (fc) ok = ok && e.country === fc;
+
+    if (search) {
+      const blob = (e.name + " " + e.designation + " " + e.department).toLowerCase();
+      ok = ok && blob.includes(search);
+    }
+
+    return ok;
+  });
+
+  renderPeopleTable(list);
+}
+
+function renderPeopleTable(list) {
+  const tbody = document.getElementById("employeeTableBody");
+  tbody.innerHTML = "";
+
+  if (!list.length) {
+    tbody.innerHTML =
+      `<tr><td colspan="10" style="text-align:center; padding:14px; opacity:0.6;">No employees found</td></tr>`;
+    return;
+  }
+
+  list.forEach(e => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${e.id}</td>
+      <td>${e.name}</td>
+      <td>${e.designation}</td>
+      <td>${e.department}</td>
+      <td>${e.country}</td>
+      <td>${badgeStatus(e.status_clean)}</td>
+      <td>${formatDate(e.joining_date)}</td>
+      <td>${formatDate(e.probation_end)}</td>
+      <td>${formatNumber(e.base_salary)}</td>
+      <td>${e.salary_currency}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function badgeStatus(st) {
+  if (st === "Active") return `<span class="status-pill status-active">Active</span>`;
+  if (st === "Probation") return `<span class="status-pill status-probation">Probation</span>`;
+  return `<span class="status-pill status-inactive">Inactive</span>`;
+}
+
+function buildCompCountryFilter() {
+  const sel = document.getElementById("compCountry");
+  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
+
+  countries.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.innerText = c;
+    sel.appendChild(opt);
+  });
+
+  sel.onchange = () => renderCompensation();
+}
+
+function renderCompensation() {
+  const fc = document.getElementById("compCountry").value;
+
+  let list = employees.slice();
+  if (fc) list = list.filter(e => e.country === fc);
+
+  const total = list.reduce((s,e) => s + salaryNPR(e), 0);
+  const avg = list.length ? total / list.length : 0;
+
+  document.getElementById("totalPayrollNPR").innerText = formatNumber(total);
+  document.getElementById("avgSalaryNPR").innerText = formatNumber(avg);
+
+  renderCurrencyCards(list);
+  renderCountryPayrollTable();
+}
+
+function renderCurrencyCards(list) {
+  const wrap = document.getElementById("currencyCards");
+  wrap.innerHTML = "";
+
+  const map = {};
+
+  list.forEach(e => {
+    if (!map[e.salary_currency]) {
+      map[e.salary_currency] = { count: 0, total: 0, rate: fxRates[e.salary_currency] };
+    }
+    map[e.salary_currency].count++;
+    map[e.salary_currency].total += e.base_salary;
+  });
+
+  Object.keys(map).forEach(cur => {
+    const obj = map[cur];
+
+    const div = document.createElement("div");
+    div.style = `
+      padding:14px; margin-bottom:10px;
+      background:rgba(255,255,255,0.08);
+      border:var(--border-soft);
+      border-radius:12px;
+    `;
+    div.innerHTML = `
+      <div style="font-size:15px; font-weight:600;">${cur}</div>
+      <div style="font-size:13px; margin-top:4px;">Employees: ${obj.count}</div>
+      <div style="font-size:13px; margin-top:4px;">
+        Total: ${formatNumber(obj.total)} ${cur}
+      </div>
+      <div style="font-size:12px; opacity:0.7; margin-top:4px;">FX → NPR: ${obj.rate}</div>
+      <div style="font-size:14px; margin-top:6px; font-weight:600;">
+        NPR: ${formatNumber(obj.total * obj.rate)}
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function renderCountryPayrollTable() {
+  const tbody = document.getElementById("countryPayrollBody");
+  tbody.innerHTML = "";
+
+  const map = {};
+
+  employees.forEach(e => {
+    if (!map[e.country])
