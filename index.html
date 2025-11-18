@@ -1,198 +1,641 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>HR Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-    body {
-        background: #050B1A;
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-        color: #CFE4FF;
-    }
-    h1 {
-        text-align: center;
-        color: #74A9FF;
-        text-shadow: 0 0 12px #0058ff;
-        margin-top: 25px;
-    }
-    .tab-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .tab-container button {
-        background: rgba(0,0,0,0.35);
-        border: 1px solid #123;
-        padding: 12px 25px;
-        margin: 0 8px;
-        border-radius: 14px;
-        color: #9EC5FF;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .tab-container button.active {
-        background: #00308f;
-        box-shadow: 0 0 10px #0058ff;
-    }
-    .kpi-row {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 40px;
-    }
-    .kpi-box {
-        width: 260px;
-        background: rgba(0,0,20,0.45);
-        margin: 12px;
-        padding: 22px;
-        border-radius: 16px;
-        text-align: center;
-        border: 1px solid #0D1A40;
-        box-shadow: 0 0 18px #00256b inset;
-    }
-    .kpi-title {
-        color: #9EC5FF;
-        font-size: 17px;
-        margin-bottom: 5px;
-    }
-    .kpi-value {
-        color: #fff;
-        font-size: 42px;
-        font-weight: 700;
-        text-shadow: 0 0 8px #007bff;
-    }
-    .section-title {
-        text-align: center;
-        margin-top: 40px;
-        margin-bottom: 15px;
-        font-size: 22px;
-        color: #9EC5FF;
-        text-shadow: 0 0 8px #007bff;
-    }
+/* ===========================
+   DARK NEON SIGNATURE THEME
+=========================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #040814;
+  color: #e8f0ff;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 40px;
+  font-weight: 700;
+  color: #8ab4ff;
+  text-shadow: 0 0 12px #0055ff;
+}
+
+/* ============ NAV =============== */
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.tab-btn {
+  padding: 10px 25px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid #0d1a40;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #a7c6ff;
+  font-size: 16px;
+  transition: 0.25s;
+  text-shadow: 0 0 8px #0033cc;
+}
+
+.tab-btn.active {
+  background: rgba(0,40,120,0.45);
+  border-color: #0055ff;
+  color: #e8f0ff;
+  box-shadow: 0 0 12px #0055ff inset, 0 0 12px #0055ff;
+}
+
+/* ============ CARD WRAPPER =============== */
+.card-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  max-width: 1400px;
+}
+
+.card {
+  background: rgba(0,0,0,0.35);
+  border-radius: 18px;
+  padding: 18px 15px;
+  width: 260px;
+  text-align: center;
+  border: 1px solid #0d1a40;
+  box-shadow: 0 0 12px #0033aa inset, 0 0 18px #0033ff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 16px #0044ff inset, 0 0 18px #0066ff;
+}
+
+.card-title {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #9ec5ff;
+}
+
+.card-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 15px #3a8bff;
+}
+
+/* Sub text on card */
+.card-sub {
+  margin-top: 8px;
+  font-size: 14px;
+  opacity: 0.75;
+  color: #9fc0ff;
+}
+
+/* Section Titles */
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #9ec5ff;
+  text-shadow: 0 0 10px #0055ff;
+}
+
+/* Tenure Card Row */
+.tenure-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+/* Hidden tabs */
+.tab-section {
+  display: none;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .card { width: 45%; }
+}
+@media (max-width: 600px) {
+  .card { width: 90%; }
+}
 </style>
 </head>
 
 <body>
-
 <h1>HR Dashboard</h1>
 
-<div class="tab-container">
-    <button class="active">Overview</button>
-    <button>Employee Details</button>
-    <button>Compensation</button>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="tab-btn active" data-tab="overview">Overview</div>
+  <div class="tab-btn" data-tab="details">Employee Details</div>
+  <div class="tab-btn" data-tab="compensation">Compensation</div>
 </div>
 
-<div class="kpi-row">
-    <div class="kpi-box">
-        <div class="kpi-title">Total Employees</div>
-        <div class="kpi-value" id="totalEmployees">0</div>
+<!-- =====================
+       OVERVIEW TAB
+===================== -->
+<div id="overview" class="tab-section active">
+
+  <!-- TOP 5 CARDS -->
+  <div class="card-row">
+    <div class="card" id="card-total">
+      <div class="card-title">Total Employees</div>
+      <div class="card-value" id="totalEmployees">0</div>
     </div>
-    <div class="kpi-box">
-        <div class="kpi-title">Active Employees</div>
-        <div class="kpi-value" id="activeEmployees">0</div>
+
+    <div class="card" id="card-active">
+      <div class="card-title">Active Employees</div>
+      <div class="card-value" id="activeEmployees">0</div>
+      <div class="card-sub" id="activePercent"></div>
     </div>
-    <div class="kpi-box">
-        <div class="kpi-title">Inactive Employees</div>
-        <div class="kpi-value" id="inactiveEmployees">0</div>
+
+    <div class="card" id="card-inactive">
+      <div class="card-title">Inactive Employees</div>
+      <div class="card-value" id="inactiveEmployees">0</div>
+      <div class="card-sub" id="inactivePercent"></div>
     </div>
-    <div class="kpi-box">
-        <div class="kpi-title">On Probation</div>
-        <div class="kpi-value" id="onProbation">0</div>
+
+    <div class="card" id="card-probation">
+      <div class="card-title">On Probation</div>
+      <div class="card-value" id="probationCount">0</div>
+      <div class="card-sub" id="probationSoon"></div>
     </div>
-    <div class="kpi-box">
-        <div class="kpi-title">Probation Ending Soon</div>
-        <div class="kpi-value" id="probationSoon">0</div>
+
+    <div class="card" id="card-alerts">
+      <div class="card-title">Alerts</div>
+      <div class="card-value" id="alertCount">0</div>
+      <div class="card-sub">Salary Not Increased ≥ 1 yr</div>
     </div>
+  </div>
+
+  <!-- TENURE SECTION -->
+  <div class="section-title">Employee Tenure Summary</div>
+
+  <div class="tenure-row">
+    <div class="card">
+      <div class="card-title">Less than 1 Year</div>
+      <div class="card-value" id="tenure1">0</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">1 – 2 Years</div>
+      <div class="card-value" id="tenure2">0</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2 – 3 Years</div>
+      <div class="card-value" id="tenure3">0</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3+ Years</div>
+      <div class="card-value" id="tenure4">0</div>
+    </div>
+  </div>
+
 </div>
 
-<h2 class="section-title">Employee Tenure Summary</h2>
+<!-- =====================
+  DETAILS TAB (EMPTY FOR NOW)
+===================== -->
+<div id="details" class="tab-section"></div>
 
-<div class="kpi-row">
-    <div class="kpi-box">
-        <div class="kpi-title">Less than 1 Year</div>
-        <div class="kpi-value" id="lessOne">0</div>
-    </div>
-    <div class="kpi-box">
-        <div class="kpi-title">1 – 2 Years</div>
-        <div class="kpi-value" id="oneTwo">0</div>
-    </div>
-    <div class="kpi-box">
-        <div class="kpi-title">2 – 3 Years</div>
-        <div class="kpi-value" id="twoThree">0</div>
-    </div>
-    <div class="kpi-box">
-        <div class="kpi-title">3+ Years</div>
-        <div class="kpi-value" id="threePlus">0</div>
-    </div>
-</div>
+<!-- =====================
+  COMPENSATION TAB
+===================== -->
+<div id="compensation" class="tab-section"></div>
 
-<script>
-const API_URL = "https://hr-api.ashishoct34.workers.dev/";
-
-async function loadData() {
-    try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        const now = new Date();
-
-        // === SUMMARY ===
-        document.getElementById("totalEmployees").innerText = data.summary.total_employees;
-        document.getElementById("activeEmployees").innerText = data.summary.active_employees;
-        document.getElementById("inactiveEmployees").innerText = data.summary.inactive_employees;
-
-        // On probation = status === "Probation"
-        let prob = data.employees.filter(e => e.status === "Probation").length;
-        document.getElementById("onProbation").innerText = prob;
-
-        // Probation ending soon from API summary
-        document.getElementById("probationSoon").innerText =
-            data.summary.probation_next_30_days;
-
-        // === TENURE (Active Employees Only) ===
-        const less1 = data.employees.filter(e => {
-            if (!e.joining_date || e.status !== "Active") return false;
-            let join = new Date(e.joining_date);
-            let yrs = (now - join) / (1000*60*60*24*365);
-            return yrs < 1;
-        }).length;
-
-        const y1to2 = data.employees.filter(e => {
-            if (!e.joining_date || e.status !== "Active") return false;
-            let join = new Date(e.joining_date);
-            let yrs = (now - join) / (1000*60*60*24*365);
-            return yrs >= 1 && yrs < 2;
-        }).length;
-
-        const y2to3 = data.employees.filter(e => {
-            if (!e.joining_date || e.status !== "Active") return false;
-            let join = new Date(e.joining_date);
-            let yrs = (now - join) / (1000*60*60*24*365);
-            return yrs >= 2 && yrs < 3;
-        }).length;
-
-        const more3 = data.employees.filter(e => {
-            if (!e.joining_date || e.status !== "Active") return false;
-            let join = new Date(e.joining_date);
-            let yrs = (now - join) / (1000*60*60*24*365);
-            return yrs >= 3;
-        }).length;
-
-        document.getElementById("lessOne").innerText = less1;
-        document.getElementById("oneTwo").innerText = y1to2;
-        document.getElementById("twoThree").innerText = y2to3;
-        document.getElementById("threePlus").innerText = more3;
-
-    } catch (e) {
-        console.error("Failed to load HR data:", e);
-    }
-}
-
-window.onload = loadData;
-</script>
+<!-- JS will come next -->
+<script src="app.js"></script>
 
 </body>
 </html>
+/* ============================
+   HR DASHBOARD – PART 2 (CORE JS)
+============================ */
+
+const API_URL = "https://hr-api.ashishoct34.workers.dev/";
+
+/* ============================
+   TAB SWITCHING
+============================ */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+/* ============================
+   FETCH API DATA
+============================ */
+async function loadData() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    if (!data || !data.summary) return;
+
+    const employees = data.employees;
+    fillCards(data);
+    calculateTenure(employees);
+
+    // save for table filtering (Part 3)
+    window._allEmployees = employees;
+
+  } catch (e) {
+    console.error("Error loading data:", e);
+  }
+}
+
+loadData();
+
+/* ============================
+   FILL TOP CARDS
+============================ */
+function fillCards(data) {
+  const total = data.summary.total_employees;
+  const active = data.summary.active_employees;
+  const inactive = data.summary.inactive_employees;
+
+  document.getElementById("totalEmployees").innerText = total;
+  document.getElementById("activeEmployees").innerText = active;
+  document.getElementById("inactiveEmployees").innerText = inactive;
+
+  // **Percentages**
+  document.getElementById("activePercent").innerText =
+    `${((active / total) * 100).toFixed(1)}% Active`;
+  document.getElementById("inactivePercent").innerText =
+    `${((inactive / total) * 100).toFixed(1)}% Attrition`;
+
+  // **Probation**
+  const prob = data.employees.filter(e => e.status === "Probation").length;
+  const probSoon = data.summary.probation_next_30_days;
+
+  document.getElementById("probationCount").innerText = prob;
+  document.getElementById("probationSoon").innerText = `Ending Soon: ${probSoon}`;
+
+  // **Alerts (salary not increased ≥ 1 yr)** 
+  const alerts = data.employees.filter(e => needsSalaryAlert(e)).length;
+  document.getElementById("alertCount").innerText = alerts;
+
+  // CLICK FILTERS
+  setupCardFilters();
+}
+
+/* ============================
+   SALARY ALERT CHECK
+============================ */
+function needsSalaryAlert(emp) {
+  if (!emp.joining_date) return false;
+  const join = new Date(emp.joining_date);
+  const now = new Date();
+
+  const diffMonths =
+    (now.getFullYear() - join.getFullYear()) * 12 +
+    (now.getMonth() - join.getMonth());
+
+  return diffMonths >= 12;
+}
+
+/* ============================
+   TENURE CALCULATION
+============================ */
+function calculateTenure(list) {
+  let t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+  const now = new Date();
+
+  list.forEach(e => {
+    if (!e.joining_date) return;
+    const d = new Date(e.joining_date);
+
+    const diffYears =
+      (now - d) / (1000 * 60 * 60 * 24 * 365);
+
+    if (diffYears < 1) t1++;
+    else if (diffYears < 2) t2++;
+    else if (diffYears < 3) t3++;
+    else t4++;
+  });
+
+  document.getElementById("tenure1").innerText = t1;
+  document.getElementById("tenure2").innerText = t2;
+  document.getElementById("tenure3").innerText = t3;
+  document.getElementById("tenure4").innerText = t4;
+}
+
+/* ============================
+   CARD CLICK FILTER HANDLERS
+   (table comes in Part 3)
+============================ */
+function setupCardFilters() {
+  document.getElementById("card-total").onclick = () => filterTable("all");
+  document.getElementById("card-active").onclick = () => filterTable("active");
+  document.getElementById("card-inactive").onclick = () => filterTable("inactive");
+  document.getElementById("card-probation").onclick = () => filterTable("probation");
+  document.getElementById("card-alerts").onclick = () => filterTable("alerts");
+}
+
+/*  
+    filterTable(type) will be implemented in PART 3 
+    but we keep the function ready.
+*/
+function filterTable(type) {
+  console.log("Filter triggered:", type);
+  // Part 3 will render table 
+}
+        /* ===========================================================
+   PART 3 – ADVANCED HR JS 
+   TABLE + FILTERS + EXPORT + ALERTS + CHARTS
+=========================================================== */
+
+/* GLOBAL VARIABLES */
+let filteredEmployees = [];
+let currentPage = 1;
+let rowsPerPage = 10;
+
+/* ===========================================================
+    BUILD EMPLOYEE TABLE UI INSIDE DETAILS TAB
+=========================================================== */
+function renderEmployeeTableSection() {
+  const html = `
+    <div style="max-width:1400px;margin:0 auto;padding:20px;">
+
+      <h2 class="section-title">Employee Details</h2>
+
+      <!-- SEARCH BAR -->
+      <input id="searchInput" type="text" placeholder="Search employee..." 
+        style="width:100%;padding:12px;border-radius:10px;border:1px solid #123;
+               background:rgba(0,0,0,0.4);color:#9ec5ff;font-size:16px;
+               margin-bottom:20px;box-shadow:0 0 12px #0033aa inset;">
+
+      <!-- EXPORT BUTTONS -->
+      <div style="text-align:right;margin-bottom:15px;">
+        <button onclick="exportCSV()" 
+          style="padding:10px 20px;border-radius:10px;background:#0033aa;
+                 color:#fff;border:none;cursor:pointer;margin-right:10px;">
+          Export CSV
+        </button>
+
+        <button onclick="exportExcel()" 
+          style="padding:10px 20px;border-radius:10px;background:#008f39;
+                 color:#fff;border:none;cursor:pointer;">
+          Export Excel
+        </button>
+      </div>
+
+      <!-- TABLE -->
+      <table id="empTable" 
+        style="width:100%;border-collapse:collapse;border:1px solid #123;">
+        <thead>
+          <tr style="background:rgba(0,0,0,0.5);color:#9ec5ff;">
+            <th onclick="sortTable(0)">Name</th>
+            <th onclick="sortTable(1)">Department</th>
+            <th onclick="sortTable(2)">Designation</th>
+            <th onclick="sortTable(3)">Joining Date</th>
+            <th onclick="sortTable(4)">Status</th>
+            <th onclick="sortTable(5)">Salary (NPR)</th>
+          </tr>
+        </thead>
+        <tbody id="empTableBody"></tbody>
+      </table>
+
+      <!-- PAGINATION -->
+      <div style="text-align:center;margin-top:20px;">
+        <button onclick="prevPage()" 
+          style="padding:10px;border-radius:10px;background:#0033aa;color:#fff;">Prev</button>
+
+        <span id="pageInfo" style="margin:0 15px;color:#9ec5ff;"></span>
+
+        <button onclick="nextPage()" 
+          style="padding:10px;border-radius:10px;background:#0033aa;color:#fff;">Next</button>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("details").innerHTML = html;
+
+  // search listener
+  document.getElementById("searchInput").addEventListener("input", () => {
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    filteredEmployees = window._allEmployees.filter(e =>
+      e.name.toLowerCase().includes(q) ||
+      e.department.toLowerCase().includes(q) ||
+      e.designation.toLowerCase().includes(q)
+    );
+    currentPage = 1;
+    renderTable();
+  });
+}
+
+/* ===========================================================
+    RENDER TABLE ROWS
+=========================================================== */
+function renderTable() {
+  let tbody = "";
+  const start = (currentPage - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+
+  const list = filteredEmployees.slice(start, end);
+
+  list.forEach(e => {
+    tbody += `
+      <tr style="border-bottom:1px solid #0d1a40;">
+        <td style="padding:10px;">${e.name}</td>
+        <td style="padding:10px;">${e.department}</td>
+        <td style="padding:10px;">${e.designation}</td>
+        <td style="padding:10px;">${e.joining_date || "-"}</td>
+        <td style="padding:10px;">${e.status}</td>
+        <td style="padding:10px;">${e.salary_npr || 0}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("empTableBody").innerHTML = tbody;
+  document.getElementById("pageInfo").innerText = 
+    `Page ${currentPage} of ${Math.ceil(filteredEmployees.length / rowsPerPage)}`;
+}
+
+/* ===========================================================
+    PAGINATION
+=========================================================== */
+function nextPage() {
+  if (currentPage * rowsPerPage < filteredEmployees.length) {
+    currentPage++;
+    renderTable();
+  }
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    renderTable();
+  }
+}
+
+/* ===========================================================
+    SORT TABLE
+=========================================================== */
+let sortDir = true;
+function sortTable(colIndex) {
+  filteredEmployees.sort((a,b) => {
+    const valA = Object.values(a)[colIndex] || "";
+    const valB = Object.values(b)[colIndex] || "";
+    return sortDir
+      ? valA.toString().localeCompare(valB.toString())
+      : valB.toString().localeCompare(valA.toString());
+  });
+  sortDir = !sortDir;
+  renderTable();
+}
+
+/* ===========================================================
+    FILTER ON CARD CLICK
+=========================================================== */
+function filterTable(type) {
+  switch(type) {
+    case "active":
+      filteredEmployees = window._allEmployees.filter(e => e.status === "Active");
+      break;
+
+    case "inactive":
+      filteredEmployees = window._allEmployees.filter(e => e.status === "Inactive");
+      break;
+
+    case "probation":
+      filteredEmployees = window._allEmployees.filter(e => e.status === "Probation");
+      break;
+
+    case "alerts":
+      filteredEmployees = window._allEmployees.filter(e => needsSalaryAlert(e));
+      break;
+
+    default:
+      filteredEmployees = [...window._allEmployees];
+  }
+
+  // Switch to Employee Details tab automatically
+  document.querySelector("[data-tab='details']").click();
+
+  currentPage = 1;
+  renderTable();
+}
+
+/* ===========================================================
+    CSV EXPORT
+=========================================================== */
+function exportCSV() {
+  let csv = "Name,Department,Designation,Joining Date,Status,Salary NPR\n";
+
+  filteredEmployees.forEach(e => {
+    csv += `${e.name},${e.department},${e.designation},${e.joining_date || ""},${e.status},${e.salary_npr || 0}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "employees.csv";
+  a.click();
+}
+
+/* ===========================================================
+    EXCEL EXPORT
+=========================================================== */
+function exportExcel() {
+  let table = [["Name","Department","Designation","Joining Date","Status","Salary NPR"]];
+  filteredEmployees.forEach(e => {
+    table.push([e.name, e.department, e.designation, e.joining_date, e.status, e.salary_npr || 0]);
+  });
+
+  let csv = table.map(r => r.join(",")).join("\n");
+
+  const blob = new Blob([csv], { type: "application/vnd.ms-excel" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "employees.xlsx";
+  a.click();
+}
+
+/* ===========================================================
+    BIRTHDAY REMINDERS
+=========================================================== */
+function getBirthdaysThisMonth(list) {
+  const now = new Date();
+  return list.filter(e => {
+    if (!e.dob) return false;
+    const d = new Date(e.dob);
+    return d.getMonth() === now.getMonth();
+  });
+}
+
+function getBirthdaysToday(list) {
+  const now = new Date();
+  return list.filter(e => {
+    if (!e.dob) return false;
+    const d = new Date(e.dob);
+    return d.getDate() === now.getDate() &&
+           d.getMonth() === now.getMonth();
+  });
+}
+
+/* ===========================================================
+    DEPARTMENT BAR CHART
+=========================================================== */
+function renderDepartmentChart(list) {
+  const ctx = document.createElement("canvas");
+  document.getElementById("overview").appendChild(ctx);
+
+  const counts = {};
+  list.forEach(e => {
+    counts[e.department] = (counts[e.department] || 0) + 1;
+  });
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: Object.keys(counts),
+      datasets: [{
+        label: "Employees",
+        data: Object.values(counts),
+      }]
+    }
+  });
+}
+
+/* ===========================================================
+    INITIALIZE DETAILS + COMPENSATION
+=========================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  renderEmployeeTableSection();
+});
+
+
