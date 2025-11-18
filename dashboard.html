@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HR Analytics Dashboard – Premium Glass Neon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* ============================================================
+   PREMIUM GLASS + NEON THEME
+============================================================ */
+
+:root {
+  --bg-main: #050612;
+  --bg-card: rgba(17, 21, 40, 0.72);
+  --bg-glass: rgba(255,255,255,0.06);
+  --bg-hover: rgba(255,255,255,0.12);
+
+  --border-soft: 1px solid rgba(255,255,255,0.09);
+  --border-glow: 1px solid rgba(79,139,255,0.55);
+
+  --text-main: #eef2ff;
+  --text-muted: #9ca3c9;
+
+  --accent: #4f8bff;
+  --accent-glow: 0 0 16px rgba(79,139,255,0.65);
+
+  --success: #3affc3;
+  --warning: #ffce6e;
+  --danger: #ff6b9b;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 10px 26px rgba(0,0,0,0.45);
+  --shadow-card: 0 16px 32px rgba(0,0,0,0.6);
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top left, #10142a 0%, #050612 60%, #000 100%);
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text-main);
+}
+
+.shell {
+  max-width: 1400px;
+  margin: auto;
+  padding: 28px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.14);
+}
+
+.sub-title {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(79,139,255,0.12);
+  border: 1px solid rgba(79,139,255,0.45);
+  color: #90b7ff;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(58,255,195,0.95);
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.tab {
+  padding: 9px 22px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border: var(--border-soft);
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(6px);
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--accent-glow);
+  border: none;
+}
+
+.tab-panel {
+  display: none;
+  margin-top: 26px;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* KPI cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.kpi-card {
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  transition: 0.28s;
+  cursor: pointer;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-card), var(--accent-glow);
+  border: var(--border-glow);
+}
+
+.kpi-title {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.kpi-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Section Cards */
+.section-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  border: var(--border-soft);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+/* Charts */
+canvas {
+  width: 100% !important;
+  height: 260px !important;
+}
+
+/* Grids */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 22px;
+}
+
+.stack-2 {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 22px;
+}
+
+/* Table */
+.table-wrap {
+  max-height: 450px;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  border: var(--border-soft);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: rgba(255,255,255,0.06);
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: rgba(79,139,255,0.18);
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-active { background: rgba(58,255,195,0.15); color: var(--success); }
+.status-probation { background: rgba(255,206,110,0.15); color: var(--warning); }
+.status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
+
+/* Tenure Cards */
+.tenure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.tenure-card {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.06);
+  border: var(--border-soft);
+  backdrop-filter: blur(14px);
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.tenure-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+  <h1>HR Analytics Dashboard</h1>
+  <div class="sub-title">Premium Glass Neon Edition · Live Notion · Cloudflare · FX</div>
+
+  <div class="live-pill">
+    <div class="live-dot"></div>
+    LIVE DATA FEED · FX SYNC
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="people">People</div>
+    <div class="tab" data-tab="compensation">Compensation</div>
+  </div>
+
+  <!-- KPI GRID -->
+  <div class="kpi-grid">
+
+    <div class="kpi-card" id="kpiTotalCard">
+      <div class="kpi-title">Total Employees</div>
+      <div class="kpi-value" id="kpiTotal">0</div>
+      <div class="kpi-sub">All Staff</div>
+    </div>
+
+    <div class="kpi-card" id="kpiActiveCard">
+      <div class="kpi-title">Active Employees</div>
+      <div class="kpi-value" id="kpiActive">0</div>
+      <div class="kpi-sub">Including probation</div>
+    </div>
+
+    <div class="kpi-card" id="kpiInactiveCard">
+      <div class="kpi-title">Inactive Employees</div>
+      <div class="kpi-value" id="kpiInactive">0</div>
+      <div class="kpi-sub">Attrition: <span id="kpiAttr">0%</span></div>
+    </div>
+
+    <div class="kpi-card" id="kpiProbCard">
+      <div class="kpi-title">On Probation</div>
+      <div class="kpi-value" id="kpiProbation">0</div>
+      <div class="kpi-sub">Ending this month: <span id="kpiProbEndingMonth">0</span></div>
+    </div>
+
+    <div class="kpi-card" id="kpiBirthdayCard">
+      <div class="kpi-title">Birthdays</div>
+      <div class="kpi-value" id="kpiBdayTotal">0</div>
+      <div class="kpi-sub">
+        Today: <span id="kpiBdayToday">0</span> · This Month: <span id="kpiBdayMonth">0</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <div class="section-card">
+      <div class="section-title">Employee Tenure Summary</div>
+
+      <div class="tenure-grid">
+        <div class="tenure-card" id="tenure0_3_card">
+          <div class="kpi-title">New Joiners (&lt; 3 months)</div>
+          <div class="tenure-value" id="tenure0_3">0</div>
+        </div>
+
+        <div class="tenure-card" id="tenure3_12_card">
+          <div class="kpi-title">3 months – 1 year</div>
+          <div class="tenure-value" id="tenure3_12">0</div>
+        </div>
+
+        <div class="tenure-card" id="tenure12_24_card">
+          <div class="kpi-title">1 – 2 years</div>
+          <div class="tenure-value" id="tenure12_24">0</div>
+        </div>
+
+        <div class="tenure-card" id="tenure24p_card">
+          <div class="kpi-title">2+ years</div>
+          <div class="tenure-value" id="tenure24p">0</div>
+        </div>
+      </div>
+
+      <div style="margin-top:28px;">
+        <canvas id="tenureChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Workforce Composition</div>
+
+      <div class="overview-grid">
+        <div>
+          <div class="kpi-title" style="margin-bottom:6px;">Department Distribution</div>
+          <canvas id="deptChart"></canvas>
+        </div>
+
+        <div class="stack-2">
+          <div>
+            <div class="kpi-title" style="margin-bottom:6px;">Gender Split</div>
+            <canvas id="genderChart"></canvas>
+          </div>
+
+          <div>
+            <div class="kpi-title" style="margin-bottom:6px;">Age Groups</div>
+            <canvas id="ageChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Probation Ending Within 30 Days</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Probation End</th>
+              <th>Days Left</th>
+            </tr>
+          </thead>
+          <tbody id="probationTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: PEOPLE -->
+  <div class="tab-panel" id="tab-people">
+    <div class="section-card">
+      <div class="section-title">Employee Master List</div>
+
+      <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+        <input id="searchInput" placeholder="Search by name, ID, designation..."
+          style="flex:1; padding:12px; border-radius:12px;
+                 background:rgba(255,255,255,0.06); border:var(--border-soft);
+                 color:white; font-size:13px;">
+
+        <select id="filterStatus"
+          style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+          border:var(--border-soft); color:white;">
+          <option value="">Status: All</option>
+          <option value="Active">Active</option>
+          <option value="Probation">Probation</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <select id="filterDept"
+          style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+          border:var(--border-soft); color:white;">
+          <option value="">Department: All</option>
+        </select>
+
+        <select id="filterCountry"
+          style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+          border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Country</th>
+              <th>Status</th>
+              <th>Joining</th>
+              <th>Probation End</th>
+              <th>Salary</th>
+              <th>Currency</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: COMPENSATION -->
+  <div class="tab-panel" id="tab-compensation">
+
+    <div class="section-card">
+      <div class="section-title">Compensation & Payroll Summary</div>
+
+      <div style="margin-bottom:20px;">
+        <select id="compCountry"
+          style="padding:12px; border-radius:12px;
+                 background:rgba(255,255,255,0.06);
+                 border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+      </div>
+
+      <div class="overview-grid" style="grid-template-columns:1.2fr 1fr; gap:26px;">
+
+        <div>
+
+          <div class="currency-card" style="
+              padding:20px; border-radius:16px;
+              background:rgba(255,255,255,0.06); border:var(--border-soft);
+              box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Total Payroll (NPR)</h3>
+            <div id="totalPayrollNPR"
+              style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div class="currency-card" style="
+              margin-top:16px; padding:20px; border-radius:16px;
+              background:rgba(255,255,255,0.06); border:var(--border-soft);
+              box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Average Salary (NPR)</h3>
+            <div id="avgSalaryNPR"
+              style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div class="currency-card" style="
+              margin-top:16px; padding:20px; border-radius:16px;
+              background:rgba(255,255,255,0.06); border:var(--border-soft);
+              box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Top Paying Country</h3>
+            <div id="topCountryName" style="font-size:22px; margin-top:4px;">–</div>
+            <div id="topCountryVal"
+                style="font-size:14px; margin-top:4px; color:var(--text-muted);"></div>
+          </div>
+
+          <div class="currency-card" style="
+              margin-top:16px; padding:20px; border-radius:16px;
+              background:rgba(255,255,255,0.06); border:var(--border-soft);
+              box-shadow:var(--shadow-soft);">
+            <h3 style="margin:0; font-size:18px;">Currency-wise Payroll</h3>
+            <div id="currencyCards" style="margin-top:14px;"></div>
+          </div>
+
+        </div>
+
+        <div class="currency-card" style="
+            padding:20px; border-radius:16px;
+            background:rgba(255,255,255,0.06); border:var(--border-soft);
+            box-shadow:var(--shadow-soft);">
+          <h3 style="margin:0; font-size:18px;">Country-wise Payroll (NPR)</h3>
+
+          <div class="table-wrap" style="margin-top:14px; max-height:390px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>Employees</th>
+                  <th>Total Payroll</th>
+                </tr>
+              </thead>
+              <tbody id="countryPayrollBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div> <!-- END SHELL -->
+
+<!-- Load JS Logic -->
+<script src="dashboard.js"></script>
+
+</body>
+</html>
