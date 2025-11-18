@@ -2,640 +2,1297 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>HR Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- Chart.js -->
+<title>HR Analytics Dashboard – Premium Glass Neon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ===========================
-   DARK NEON SIGNATURE THEME
-=========================== */
+
+/* ============================================================
+   PREMIUM GLASS + NEON THEME
+============================================================ */
+
+:root {
+  --bg-main: #050612;
+  --bg-card: rgba(17, 21, 40, 0.72);
+  --bg-glass: rgba(255,255,255,0.06);
+  --bg-hover: rgba(255,255,255,0.12);
+
+  --border-soft: 1px solid rgba(255,255,255,0.09);
+  --border-glow: 1px solid rgba(79,139,255,0.55);
+
+  --text-main: #eef2ff;
+  --text-muted: #9ca3c9;
+
+  --accent: #4f8bff;
+  --accent-glow: 0 0 16px rgba(79,139,255,0.65);
+
+  --success: #3affc3;
+  --warning: #ffce6e;
+  --danger: #ff6b9b;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 10px 26px rgba(0,0,0,0.45);
+  --shadow-card: 0 16px 32px rgba(0,0,0,0.6);
+}
+
 body {
   margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #040814;
-  color: #e8f0ff;
+  background: radial-gradient(circle at top left, #10142a 0%, #050612 60%, #000 100%);
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text-main);
 }
+
+/* ============================================================
+   LAYOUT WRAPPER
+============================================================ */
+
+.shell {
+  max-width: 1400px;
+  margin: auto;
+  padding: 28px;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
 
 h1 {
-  text-align: center;
-  padding: 20px 0;
-  font-size: 40px;
-  font-weight: 700;
-  color: #8ab4ff;
-  text-shadow: 0 0 12px #0055ff;
-}
-
-/* ============ NAV =============== */
-.navbar {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-.tab-btn {
-  padding: 10px 25px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid #0d1a40;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #a7c6ff;
-  font-size: 16px;
-  transition: 0.25s;
-  text-shadow: 0 0 8px #0033cc;
-}
-
-.tab-btn.active {
-  background: rgba(0,40,120,0.45);
-  border-color: #0055ff;
-  color: #e8f0ff;
-  box-shadow: 0 0 12px #0055ff inset, 0 0 12px #0055ff;
-}
-
-/* ============ CARD WRAPPER =============== */
-.card-row {
-  display: flex;
-  justify-content: center;
-  gap: 22px;
-  flex-wrap: wrap;
-  margin: 20px auto;
-  max-width: 1400px;
-}
-
-.card {
-  background: rgba(0,0,0,0.35);
-  border-radius: 18px;
-  padding: 18px 15px;
-  width: 260px;
-  text-align: center;
-  border: 1px solid #0d1a40;
-  box-shadow: 0 0 12px #0033aa inset, 0 0 18px #0033ff;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 16px #0044ff inset, 0 0 18px #0066ff;
-}
-
-.card-title {
-  font-size: 18px;
-  margin-bottom: 6px;
-  color: #9ec5ff;
-}
-
-.card-value {
-  font-size: 40px;
-  font-weight: 700;
+  margin: 0;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   color: #ffffff;
-  text-shadow: 0 0 15px #3a8bff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.14);
 }
 
-/* Sub text on card */
-.card-sub {
-  margin-top: 8px;
+.sub-title {
+  margin-top: 6px;
   font-size: 14px;
-  opacity: 0.75;
-  color: #9fc0ff;
+  color: var(--text-muted);
 }
 
-/* Section Titles */
-.section-title {
-  text-align: center;
-  font-size: 24px;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  color: #9ec5ff;
-  text-shadow: 0 0 10px #0055ff;
+/* LIVE Badge */
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+
+  background: rgba(79,139,255,0.12);
+  border: 1px solid rgba(79,139,255,0.45);
+
+  color: #90b7ff;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
-/* Tenure Card Row */
-.tenure-row {
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(58,255,195,0.95);
+}
+
+/* ============================================================
+   TABS
+============================================================ */
+
+.tabs {
   display: flex;
-  justify-content: center;
-  gap: 22px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
+  gap: 12px;
+  margin-top: 22px;
 }
 
-/* Hidden tabs */
-.tab-section {
+.tab {
+  padding: 9px 22px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+  border: var(--border-soft);
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(6px);
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--accent-glow);
+  border: none;
+}
+
+.tab-panel {
   display: none;
+  margin-top: 26px;
 }
 
-.tab-section.active {
+.tab-panel.active {
   display: block;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .card { width: 45%; }
+/* ============================================================
+   KPI CARDS
+============================================================ */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+  gap: 18px;
+  margin-top: 24px;
 }
-@media (max-width: 600px) {
-  .card { width: 90%; }
+
+.kpi-card {
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  transition: 0.28s;
+  cursor: pointer;
 }
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.10);
+  box-shadow: var(--shadow-card), var(--accent-glow);
+  border: var(--border-glow);
+}
+
+.kpi-title {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.kpi-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   SECTION CARDS
+============================================================ */
+
+.section-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  border: var(--border-soft);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+/* ============================================================
+   CHART CANVAS
+============================================================ */
+
+canvas {
+  width: 100% !important;
+  height: 260px !important;
+}
+
+/* ============================================================
+   GRID LAYOUTS
+============================================================ */
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 22px;
+}
+
+.stack-2 {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 22px;
+}
+
+/* ============================================================
+   TABLES
+============================================================ */
+
+.table-wrap {
+  max-height: 450px;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  border: var(--border-soft);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead {
+  background: rgba(255,255,255,0.06);
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: rgba(79,139,255,0.18);
+}
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-active { background: rgba(58,255,195,0.15); color: var(--success); }
+.status-probation { background: rgba(255,206,110,0.15); color: var(--warning); }
+.status-inactive { background: rgba(255,107,155,0.20); color: var(--danger); }
+
+/* ============================================================
+   TENURE CARDS
+============================================================ */
+
+.tenure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.tenure-card {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.06);
+  border: var(--border-soft);
+  backdrop-filter: blur(14px);
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.tenure-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
 </style>
 </head>
-
 <body>
-<h1>HR Dashboard</h1>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="tab-btn active" data-tab="overview">Overview</div>
-  <div class="tab-btn" data-tab="details">Employee Details</div>
-  <div class="tab-btn" data-tab="compensation">Compensation</div>
-</div>
+<div class="shell">
 
-<!-- =====================
-       OVERVIEW TAB
-===================== -->
-<div id="overview" class="tab-section active">
+  <!-- ============================================================
+       HEADER SECTION
+  ============================================================ -->
+  <h1>HR Analytics Dashboard</h1>
+  <div class="sub-title">Premium Glass Neon Edition · Live Notion + Cloudflare + FX</div>
 
-  <!-- TOP 5 CARDS -->
-  <div class="card-row">
-    <div class="card" id="card-total">
-      <div class="card-title">Total Employees</div>
-      <div class="card-value" id="totalEmployees">0</div>
-    </div>
-
-    <div class="card" id="card-active">
-      <div class="card-title">Active Employees</div>
-      <div class="card-value" id="activeEmployees">0</div>
-      <div class="card-sub" id="activePercent"></div>
-    </div>
-
-    <div class="card" id="card-inactive">
-      <div class="card-title">Inactive Employees</div>
-      <div class="card-value" id="inactiveEmployees">0</div>
-      <div class="card-sub" id="inactivePercent"></div>
-    </div>
-
-    <div class="card" id="card-probation">
-      <div class="card-title">On Probation</div>
-      <div class="card-value" id="probationCount">0</div>
-      <div class="card-sub" id="probationSoon"></div>
-    </div>
-
-    <div class="card" id="card-alerts">
-      <div class="card-title">Alerts</div>
-      <div class="card-value" id="alertCount">0</div>
-      <div class="card-sub">Salary Not Increased ≥ 1 yr</div>
-    </div>
+  <div class="live-pill">
+    <div class="live-dot"></div>
+    LIVE DATA FEED · FX SYNC
   </div>
 
-  <!-- TENURE SECTION -->
-  <div class="section-title">Employee Tenure Summary</div>
 
-  <div class="tenure-row">
-    <div class="card">
-      <div class="card-title">Less than 1 Year</div>
-      <div class="card-value" id="tenure1">0</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">1 – 2 Years</div>
-      <div class="card-value" id="tenure2">0</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">2 – 3 Years</div>
-      <div class="card-value" id="tenure3">0</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">3+ Years</div>
-      <div class="card-value" id="tenure4">0</div>
-    </div>
+  <!-- ============================================================
+       TABS
+  ============================================================ -->
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="people">People</div>
+    <div class="tab" data-tab="compensation">Compensation</div>
   </div>
 
-</div>
 
-<!-- =====================
-  DETAILS TAB (EMPTY FOR NOW)
-===================== -->
-<div id="details" class="tab-section"></div>
+  <!-- ============================================================
+       KPI GRID
+  ============================================================ -->
+  <div class="kpi-grid">
 
-<!-- =====================
-  COMPENSATION TAB
-===================== -->
-<div id="compensation" class="tab-section"></div>
+    <div class="kpi-card" id="kpiTotalCard">
+      <div class="kpi-title">Total Employees</div>
+      <div class="kpi-value" id="kpiTotal">0</div>
+      <div class="kpi-sub">All Staff</div>
+    </div>
 
-<!-- JS will come next -->
-<script src="app.js"></script>
+    <div class="kpi-card" id="kpiActiveCard">
+      <div class="kpi-title">Active Employees</div>
+      <div class="kpi-value" id="kpiActive">0</div>
+      <div class="kpi-sub">Including probation</div>
+    </div>
 
-</body>
-</html>
-/* ============================
-   HR DASHBOARD – PART 2 (CORE JS)
-============================ */
+    <div class="kpi-card" id="kpiInactiveCard">
+      <div class="kpi-title">Inactive Employees</div>
+      <div class="kpi-value" id="kpiInactive">0</div>
+      <div class="kpi-sub">Attrition: <span id="kpiAttr">0%</span></div>
+    </div>
 
-const API_URL = "https://hr-api.ashishoct34.workers.dev/";
+    <div class="kpi-card" id="kpiProbCard">
+      <div class="kpi-title">On Probation</div>
+      <div class="kpi-value" id="kpiProbation">0</div>
+      <div class="kpi-sub">
+        Ending this month: <span id="kpiProbEndingMonth">0</span>
+      </div>
+    </div>
 
-/* ============================
-   TAB SWITCHING
-============================ */
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-section").forEach(sec => sec.classList.remove("active"));
+    <div class="kpi-card" id="kpiBdayTodayCard">
+      <div class="kpi-title">Birthdays Today 🎉</div>
+      <div class="kpi-value" id="kpiBdayToday">0</div>
+      <div class="kpi-sub">Celebrate today</div>
+    </div>
 
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.add("active");
-  });
-});
+    <div class="kpi-card" id="kpiBdayMonthCard">
+      <div class="kpi-title">Birthdays This Month</div>
+      <div class="kpi-value" id="kpiBdayMonth">0</div>
+      <div class="kpi-sub">This calendar month</div>
+    </div>
 
-/* ============================
-   FETCH API DATA
-============================ */
-async function loadData() {
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
+  </div>
+     <!-- ============================================================
+       OVERVIEW TAB PANEL
+  ============================================================ -->
+  <div class="tab-panel active" id="tab-overview">
 
-    if (!data || !data.summary) return;
+    <!-- TENURE SUMMARY -->
+    <div class="section-card">
+      <div class="section-title">Employee Tenure Summary</div>
 
-    const employees = data.employees;
-    fillCards(data);
-    calculateTenure(employees);
+      <div class="tenure-grid">
 
-    // save for table filtering (Part 3)
-    window._allEmployees = employees;
+        <div class="tenure-card" id="tenure0_3_card">
+          <div class="kpi-title">New Joiners (&lt; 3 months)</div>
+          <div class="tenure-value" id="tenure0_3">0</div>
+        </div>
 
-  } catch (e) {
-    console.error("Error loading data:", e);
-  }
-}
+        <div class="tenure-card" id="tenure3_12_card">
+          <div class="kpi-title">3 months – 1 year</div>
+          <div class="tenure-value" id="tenure3_12">0</div>
+        </div>
 
-loadData();
+        <div class="tenure-card" id="tenure12_24_card">
+          <div class="kpi-title">1 – 2 years</div>
+          <div class="tenure-value" id="tenure12_24">0</div>
+        </div>
 
-/* ============================
-   FILL TOP CARDS
-============================ */
-function fillCards(data) {
-  const total = data.summary.total_employees;
-  const active = data.summary.active_employees;
-  const inactive = data.summary.inactive_employees;
+        <div class="tenure-card" id="tenure24p_card">
+          <div class="kpi-title">2+ years</div>
+          <div class="tenure-value" id="tenure24p">0</div>
+        </div>
 
-  document.getElementById("totalEmployees").innerText = total;
-  document.getElementById("activeEmployees").innerText = active;
-  document.getElementById("inactiveEmployees").innerText = inactive;
-
-  // **Percentages**
-  document.getElementById("activePercent").innerText =
-    `${((active / total) * 100).toFixed(1)}% Active`;
-  document.getElementById("inactivePercent").innerText =
-    `${((inactive / total) * 100).toFixed(1)}% Attrition`;
-
-  // **Probation**
-  const prob = data.employees.filter(e => e.status === "Probation").length;
-  const probSoon = data.summary.probation_next_30_days;
-
-  document.getElementById("probationCount").innerText = prob;
-  document.getElementById("probationSoon").innerText = `Ending Soon: ${probSoon}`;
-
-  // **Alerts (salary not increased ≥ 1 yr)** 
-  const alerts = data.employees.filter(e => needsSalaryAlert(e)).length;
-  document.getElementById("alertCount").innerText = alerts;
-
-  // CLICK FILTERS
-  setupCardFilters();
-}
-
-/* ============================
-   SALARY ALERT CHECK
-============================ */
-function needsSalaryAlert(emp) {
-  if (!emp.joining_date) return false;
-  const join = new Date(emp.joining_date);
-  const now = new Date();
-
-  const diffMonths =
-    (now.getFullYear() - join.getFullYear()) * 12 +
-    (now.getMonth() - join.getMonth());
-
-  return diffMonths >= 12;
-}
-
-/* ============================
-   TENURE CALCULATION
-============================ */
-function calculateTenure(list) {
-  let t1 = 0, t2 = 0, t3 = 0, t4 = 0;
-  const now = new Date();
-
-  list.forEach(e => {
-    if (!e.joining_date) return;
-    const d = new Date(e.joining_date);
-
-    const diffYears =
-      (now - d) / (1000 * 60 * 60 * 24 * 365);
-
-    if (diffYears < 1) t1++;
-    else if (diffYears < 2) t2++;
-    else if (diffYears < 3) t3++;
-    else t4++;
-  });
-
-  document.getElementById("tenure1").innerText = t1;
-  document.getElementById("tenure2").innerText = t2;
-  document.getElementById("tenure3").innerText = t3;
-  document.getElementById("tenure4").innerText = t4;
-}
-
-/* ============================
-   CARD CLICK FILTER HANDLERS
-   (table comes in Part 3)
-============================ */
-function setupCardFilters() {
-  document.getElementById("card-total").onclick = () => filterTable("all");
-  document.getElementById("card-active").onclick = () => filterTable("active");
-  document.getElementById("card-inactive").onclick = () => filterTable("inactive");
-  document.getElementById("card-probation").onclick = () => filterTable("probation");
-  document.getElementById("card-alerts").onclick = () => filterTable("alerts");
-}
-
-/*  
-    filterTable(type) will be implemented in PART 3 
-    but we keep the function ready.
-*/
-function filterTable(type) {
-  console.log("Filter triggered:", type);
-  // Part 3 will render table 
-}
-        /* ===========================================================
-   PART 3 – ADVANCED HR JS 
-   TABLE + FILTERS + EXPORT + ALERTS + CHARTS
-=========================================================== */
-
-/* GLOBAL VARIABLES */
-let filteredEmployees = [];
-let currentPage = 1;
-let rowsPerPage = 10;
-
-/* ===========================================================
-    BUILD EMPLOYEE TABLE UI INSIDE DETAILS TAB
-=========================================================== */
-function renderEmployeeTableSection() {
-  const html = `
-    <div style="max-width:1400px;margin:0 auto;padding:20px;">
-
-      <h2 class="section-title">Employee Details</h2>
-
-      <!-- SEARCH BAR -->
-      <input id="searchInput" type="text" placeholder="Search employee..." 
-        style="width:100%;padding:12px;border-radius:10px;border:1px solid #123;
-               background:rgba(0,0,0,0.4);color:#9ec5ff;font-size:16px;
-               margin-bottom:20px;box-shadow:0 0 12px #0033aa inset;">
-
-      <!-- EXPORT BUTTONS -->
-      <div style="text-align:right;margin-bottom:15px;">
-        <button onclick="exportCSV()" 
-          style="padding:10px 20px;border-radius:10px;background:#0033aa;
-                 color:#fff;border:none;cursor:pointer;margin-right:10px;">
-          Export CSV
-        </button>
-
-        <button onclick="exportExcel()" 
-          style="padding:10px 20px;border-radius:10px;background:#008f39;
-                 color:#fff;border:none;cursor:pointer;">
-          Export Excel
-        </button>
       </div>
 
-      <!-- TABLE -->
-      <table id="empTable" 
-        style="width:100%;border-collapse:collapse;border:1px solid #123;">
-        <thead>
-          <tr style="background:rgba(0,0,0,0.5);color:#9ec5ff;">
-            <th onclick="sortTable(0)">Name</th>
-            <th onclick="sortTable(1)">Department</th>
-            <th onclick="sortTable(2)">Designation</th>
-            <th onclick="sortTable(3)">Joining Date</th>
-            <th onclick="sortTable(4)">Status</th>
-            <th onclick="sortTable(5)">Salary (NPR)</th>
-          </tr>
-        </thead>
-        <tbody id="empTableBody"></tbody>
-      </table>
+      <div style="margin-top:28px;">
+        <canvas id="tenureChart"></canvas>
+      </div>
+    </div>
 
-      <!-- PAGINATION -->
-      <div style="text-align:center;margin-top:20px;">
-        <button onclick="prevPage()" 
-          style="padding:10px;border-radius:10px;background:#0033aa;color:#fff;">Prev</button>
 
-        <span id="pageInfo" style="margin:0 15px;color:#9ec5ff;"></span>
+    <!-- WORKFORCE COMPOSITION -->
+    <div class="section-card">
+      <div class="section-title">Workforce Composition</div>
 
-        <button onclick="nextPage()" 
-          style="padding:10px;border-radius:10px;background:#0033aa;color:#fff;">Next</button>
+      <div class="overview-grid">
+        <!-- Department -->
+        <div>
+          <div class="kpi-title" style="margin-bottom:6px;">Department Distribution</div>
+          <canvas id="deptChart"></canvas>
+        </div>
+
+        <!-- Gender + Age -->
+        <div class="stack-2">
+          <div>
+            <div class="kpi-title" style="margin-bottom:6px;">Gender Split</div>
+            <canvas id="genderChart"></canvas>
+          </div>
+
+          <div>
+            <div class="kpi-title" style="margin-bottom:6px;">Age Groups</div>
+            <canvas id="ageChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- PROBATION ENDING SOON -->
+    <div class="section-card">
+      <div class="section-title">Probation Ending Within 30 Days</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Probation End</th>
+              <th>Days Left</th>
+            </tr>
+          </thead>
+
+          <tbody id="probationTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div> <!-- END OVERVIEW -->
+
+
+  <!-- ============================================================
+       PEOPLE TAB PANEL
+  ============================================================ -->
+  <div class="tab-panel" id="tab-people">
+
+    <div class="section-card">
+      <div class="section-title">Employee Master List</div>
+
+      <!-- FILTER BAR -->
+      <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+
+        <input id="searchInput"
+               placeholder="Search by name, ID, designation..."
+               style="flex:1; padding:12px; border-radius:12px;
+                      background:rgba(255,255,255,0.06); border:var(--border-soft);
+                      color:white; font-size:13px;">
+
+        <select id="filterStatus"
+                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+                       border:var(--border-soft); color:white;">
+          <option value="">Status: All</option>
+          <option value="Active">Active</option>
+          <option value="Probation">Probation</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <select id="filterDept"
+                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+                       border:var(--border-soft); color:white;">
+          <option value="">Department: All</option>
+        </select>
+
+        <select id="filterCountry"
+                style="padding:12px; border-radius:12px; background:rgba(255,255,255,0.06);
+                       border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+
+      </div>
+
+      <!-- EMPLOYEE TABLE -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Country</th>
+              <th>Status</th>
+              <th>Joining</th>
+              <th>Probation End</th>
+              <th>Salary</th>
+              <th>Currency</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody"></tbody>
+        </table>
       </div>
 
     </div>
-  `;
 
-  document.getElementById("details").innerHTML = html;
+  </div> <!-- END PEOPLE -->
 
-  // search listener
-  document.getElementById("searchInput").addEventListener("input", () => {
-    const q = document.getElementById("searchInput").value.toLowerCase();
-    filteredEmployees = window._allEmployees.filter(e =>
-      e.name.toLowerCase().includes(q) ||
-      e.department.toLowerCase().includes(q) ||
-      e.designation.toLowerCase().includes(q)
-    );
-    currentPage = 1;
-    renderTable();
-  });
+
+
+  <!-- ============================================================
+       COMPENSATION TAB PANEL
+  ============================================================ -->
+  <div class="tab-panel" id="tab-compensation">
+
+    <div class="section-card">
+      <div class="section-title">Compensation & Payroll Summary</div>
+
+      <!-- COUNTRY FILTER -->
+      <div style="margin-bottom:20px;">
+        <select id="compCountry"
+                style="padding:12px; border-radius:12px;
+                       background:rgba(255,255,255,0.06);
+                       border:var(--border-soft); color:white;">
+          <option value="">Country: All</option>
+        </select>
+      </div>
+
+      <div class="overview-grid" style="grid-template-columns:1.2fr 1fr; gap:26px;">
+
+        <!-- LEFT COLUMN: TOTALS + FX CARDS -->
+        <div>
+
+          <div class="currency-card" style="
+                padding:20px; border-radius:16px;
+                background:rgba(255,255,255,0.06);
+                border:var(--border-soft);
+                box-shadow:var(--shadow-soft);
+              ">
+            <h3 style="margin:0; font-size:18px;">Total Payroll (NPR)</h3>
+            <div id="totalPayrollNPR"
+                 style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div class="currency-card" style="
+                margin-top:16px; padding:20px; border-radius:16px;
+                background:rgba(255,255,255,0.06);
+                border:var(--border-soft);
+                box-shadow:var(--shadow-soft);
+              ">
+            <h3 style="margin:0; font-size:18px;">Average Salary (NPR)</h3>
+            <div id="avgSalaryNPR"
+                 style="font-size:26px; margin-top:6px; font-weight:600;">0</div>
+          </div>
+
+          <div class="currency-card" style="
+                margin-top:16px; padding:20px; border-radius:16px;
+                background:rgba(255,255,255,0.06);
+                border:var(--border-soft);
+                box-shadow:var(--shadow-soft);
+              ">
+            <h3 style="margin:0; font-size:18px;">Top Paying Country</h3>
+            <div id="topCountryName" style="font-size:22px; margin-top:4px;">–</div>
+            <div id="topCountryVal"
+                 style="font-size:14px; margin-top:4px; color:var(--text-muted);"></div>
+          </div>
+
+          <div class="currency-card" style="
+                margin-top:16px; padding:20px; border-radius:16px;
+                background:rgba(255,255,255,0.06);
+                border:var(--border-soft);
+                box-shadow:var(--shadow-soft);
+              ">
+            <h3 style="margin:0; font-size:18px;">Currency-wise Payroll</h3>
+
+            <div id="currencyCards" style="margin-top:14px;"></div>
+          </div>
+
+        </div> <!-- END LEFT -->
+
+
+        <!-- RIGHT COLUMN -->
+        <div class="currency-card" style="
+              padding:20px; border-radius:16px;
+              background:rgba(255,255,255,0.06);
+              border:var(--border-soft);
+              box-shadow:var(--shadow-soft);
+            ">
+          <h3 style="margin:0; font-size:18px;">Country-wise Payroll (NPR)</h3>
+
+          <div class="table-wrap" style="margin-top:14px; max-height:390px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>Employees</th>
+                  <th>Total Payroll</th>
+                </tr>
+              </thead>
+              <tbody id="countryPayrollBody"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div> <!-- END overview-grid -->
+
+    </div>
+
+  </div> <!-- END COMPENSATION TAB -->
+
+</div> <!-- END SHELL -->
+
+
+<!-- ============================================================
+     JAVASCRIPT LOGIC
+============================================================ -->
+<script>
+
+let employees = [];
+let fxRates = { NPR: 1 };
+let charts = {};
+
+const API_URL = "https://hr-api.ashishoct34.workers.dev/api/hr";
+const BASE_CURRENCY = "NPR";
+
+
+/* ==========================================
+   FETCH + NORMALIZE
+========================================== */
+async function loadHRData() {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+
+  employees = data.employees.map(e => normalizeEmployee(e));
+
+  const curList = [...new Set(employees.map(e => e.salary_currency).filter(Boolean))];
+  fxRates = await loadFxRates(curList);
 }
 
-/* ===========================================================
-    RENDER TABLE ROWS
-=========================================================== */
-function renderTable() {
-  let tbody = "";
-  const start = (currentPage - 1) * rowsPerPage;
-  const end = start + rowsPerPage;
+function normalizeEmployee(e) {
 
-  const list = filteredEmployees.slice(start, end);
+  const currency = (e.salary_fx || e.salary_currency || "NPR").toUpperCase();
+  let salary = e.last_salary || e.salary_npr || 0;
+  salary = Number(salary) || 0;
 
-  list.forEach(e => {
-    tbody += `
-      <tr style="border-bottom:1px solid #0d1a40;">
-        <td style="padding:10px;">${e.name}</td>
-        <td style="padding:10px;">${e.department}</td>
-        <td style="padding:10px;">${e.designation}</td>
-        <td style="padding:10px;">${e.joining_date || "-"}</td>
-        <td style="padding:10px;">${e.status}</td>
-        <td style="padding:10px;">${e.salary_npr || 0}</td>
-      </tr>
-    `;
-  });
+  return {
+    id: e.id || "",
+    name: e.name || "",
+    department: e.department || "Unknown",
+    designation: e.designation || "",
+    gender: e.gender || "Unknown",
+    education: e.education || "",
+    country: e.country || "",
+    joining_date: e.joining_date || null,
+    probation_end: e.probation_end || null,
+    dob: e.dob || null,
 
-  document.getElementById("empTableBody").innerHTML = tbody;
-  document.getElementById("pageInfo").innerText = 
-    `Page ${currentPage} of ${Math.ceil(filteredEmployees.length / rowsPerPage)}`;
+    status_raw: e.status_raw || "",
+    status_clean: classifyStatus(e),
+
+    salary_currency: currency,
+    base_salary: salary
+  };
 }
 
-/* ===========================================================
-    PAGINATION
-=========================================================== */
-function nextPage() {
-  if (currentPage * rowsPerPage < filteredEmployees.length) {
-    currentPage++;
-    renderTable();
-  }
-}
 
-function prevPage() {
-  if (currentPage > 1) {
-    currentPage--;
-    renderTable();
-  }
-}
-
-/* ===========================================================
-    SORT TABLE
-=========================================================== */
-let sortDir = true;
-function sortTable(colIndex) {
-  filteredEmployees.sort((a,b) => {
-    const valA = Object.values(a)[colIndex] || "";
-    const valB = Object.values(b)[colIndex] || "";
-    return sortDir
-      ? valA.toString().localeCompare(valB.toString())
-      : valB.toString().localeCompare(valA.toString());
-  });
-  sortDir = !sortDir;
-  renderTable();
-}
-
-/* ===========================================================
-    FILTER ON CARD CLICK
-=========================================================== */
-function filterTable(type) {
-  switch(type) {
-    case "active":
-      filteredEmployees = window._allEmployees.filter(e => e.status === "Active");
-      break;
-
-    case "inactive":
-      filteredEmployees = window._allEmployees.filter(e => e.status === "Inactive");
-      break;
-
-    case "probation":
-      filteredEmployees = window._allEmployees.filter(e => e.status === "Probation");
-      break;
-
-    case "alerts":
-      filteredEmployees = window._allEmployees.filter(e => needsSalaryAlert(e));
-      break;
-
-    default:
-      filteredEmployees = [...window._allEmployees];
-  }
-
-  // Switch to Employee Details tab automatically
-  document.querySelector("[data-tab='details']").click();
-
-  currentPage = 1;
-  renderTable();
-}
-
-/* ===========================================================
-    CSV EXPORT
-=========================================================== */
-function exportCSV() {
-  let csv = "Name,Department,Designation,Joining Date,Status,Salary NPR\n";
-
-  filteredEmployees.forEach(e => {
-    csv += `${e.name},${e.department},${e.designation},${e.joining_date || ""},${e.status},${e.salary_npr || 0}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "employees.csv";
-  a.click();
-}
-
-/* ===========================================================
-    EXCEL EXPORT
-=========================================================== */
-function exportExcel() {
-  let table = [["Name","Department","Designation","Joining Date","Status","Salary NPR"]];
-  filteredEmployees.forEach(e => {
-    table.push([e.name, e.department, e.designation, e.joining_date, e.status, e.salary_npr || 0]);
-  });
-
-  let csv = table.map(r => r.join(",")).join("\n");
-
-  const blob = new Blob([csv], { type: "application/vnd.ms-excel" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "employees.xlsx";
-  a.click();
-}
-
-/* ===========================================================
-    BIRTHDAY REMINDERS
-=========================================================== */
-function getBirthdaysThisMonth(list) {
+/* ==========================================
+   CORRECT PROBATION LOGIC
+========================================== */
+function classifyStatus(e) {
+  const raw = (e.status_raw || "").toLowerCase();
+  const end = parseDate(e.probation_end);
   const now = new Date();
-  return list.filter(e => {
-    if (!e.dob) return false;
-    const d = new Date(e.dob);
-    return d.getMonth() === now.getMonth();
+
+  // Active + future probation end → Probation
+  if (end && end > now && raw.includes("active")) {
+    return "Probation";
+  }
+
+  if (raw.includes("inactive") || raw.includes("❌")) return "Inactive";
+  if (raw.includes("active") || raw.includes("✅")) return "Active";
+
+  return "Inactive";
+}
+
+
+/* ==========================================
+   DATE HELPERS
+========================================== */
+function parseDate(d) {
+  if (!d) return null;
+  const x = new Date(d);
+  return isNaN(x) ? null : x;
+}
+
+function formatDate(d) {
+  if (!d) return "";
+  return new Date(d).toLocaleDateString("en-GB", {
+    day: "2-digit", month: "short", year: "numeric"
   });
 }
 
-function getBirthdaysToday(list) {
+function formatNumber(n) {
+  return Number(n).toLocaleString("en-IN");
+}
+
+
+/* ==========================================
+   KPI RENDERING
+========================================== */
+function renderKPIs() {
+  const active = employees.filter(e => e.status_clean === "Active" || e.status_clean === "Probation");
+  const inactive = employees.filter(e => e.status_clean === "Inactive");
+  const probation = employees.filter(e => e.status_clean === "Probation");
+
+  const total = employees.length || 1;
+  const attr = (inactive.length / total) * 100;
+
+  document.getElementById("kpiTotal").innerText = employees.length;
+  document.getElementById("kpiActive").innerText = active.length;
+  document.getElementById("kpiInactive").innerText = inactive.length;
+  document.getElementById("kpiProbation").innerText = probation.length;
+  document.getElementById("kpiAttr").innerText = attr.toFixed(1) + "%";
+
+  // Probation ending this month
+  let endingMonth = 0;
   const now = new Date();
-  return list.filter(e => {
-    if (!e.dob) return false;
-    const d = new Date(e.dob);
-    return d.getDate() === now.getDate() &&
-           d.getMonth() === now.getMonth();
+  const m = now.getMonth();
+  const y = now.getFullYear();
+
+  probation.forEach(e => {
+    const end = parseDate(e.probation_end);
+    if (end && end.getMonth() === m && end.getFullYear() === y) {
+      endingMonth++;
+    }
   });
+
+  document.getElementById("kpiProbEndingMonth").innerText = endingMonth;
+
+
+  // Birthdays
+  let bToday = 0;
+  let bMonth = 0;
+
+  employees.forEach(e => {
+    const dob = parseDate(e.dob);
+    if (!dob) return;
+
+    if (dob.getDate() === now.getDate() && dob.getMonth() === m) bToday++;
+    if (dob.getMonth() === m) bMonth++;
+  });
+
+  document.getElementById("kpiBdayToday").innerText = bToday;
+  document.getElementById("kpiBdayMonth").innerText = bMonth;
 }
 
-/* ===========================================================
-    DEPARTMENT BAR CHART
-=========================================================== */
-function renderDepartmentChart(list) {
-  const ctx = document.createElement("canvas");
-  document.getElementById("overview").appendChild(ctx);
 
-  const counts = {};
-  list.forEach(e => {
-    counts[e.department] = (counts[e.department] || 0) + 1;
+/* ==========================================
+   TENURE LOGIC
+========================================== */
+function calcTenureMonths(joinDate) {
+  const join = parseDate(joinDate);
+  if (!join) return null;
+
+  const now = new Date();
+  return (now.getFullYear() - join.getFullYear()) * 12 +
+         (now.getMonth() - join.getMonth());
+}
+
+function renderTenureCards() {
+  let t0 = 0, t3 = 0, t12 = 0, t24 = 0;
+
+  employees.forEach(e => {
+    const t = calcTenureMonths(e.joining_date);
+    if (t == null || t < 0) return;
+
+    if (t < 3) t0++;
+    else if (t < 12) t3++;
+    else if (t < 24) t12++;
+    else t24++;
   });
 
-  new Chart(ctx, {
+  document.getElementById("tenure0_3").innerText = t0;
+  document.getElementById("tenure3_12").innerText = t3;
+  document.getElementById("tenure12_24").innerText = t12;
+  document.getElementById("tenure24p").innerText = t24;
+
+  renderTenureChart([t0, t3, t12, t24]);
+}
+
+
+/* ==========================================
+   TENURE CHART
+========================================== */
+function renderTenureChart(vals) {
+  if (charts.tenure) charts.tenure.destroy();
+  charts.tenure = new Chart(document.getElementById("tenureChart"), {
     type: "bar",
     data: {
-      labels: Object.keys(counts),
+      labels: ["<3m", "3m–1y", "1–2y", "2+y"],
       datasets: [{
-        label: "Employees",
-        data: Object.values(counts),
+        data: vals,
+        backgroundColor: ["#4f8bff","#7f9cff","#ff6b9b","#ffce6e"],
+        borderWidth: 0
       }]
+    },
+    options: {
+      plugins: { legend: { display: false }},
+      scales: {
+        x: { ticks: { color:"#ccc" }, grid:{ display:false }},
+        y: { ticks: { color:"#ccc" }, grid:{ color:"rgba(255,255,255,0.08)" }}
+      }
     }
   });
 }
 
-/* ===========================================================
-    INITIALIZE DETAILS + COMPENSATION
-=========================================================== */
+
+/* ==========================================
+   OVERVIEW CHARTS + PROBATION TABLE
+========================================== */
+function renderOverviewCharts() {
+
+  // Department chart
+  const deptMap = countBy(employees, e => e.department);
+  const dLabels = Object.keys(deptMap);
+  const dVals = Object.values(deptMap);
+
+  if (charts.dept) charts.dept.destroy();
+  charts.dept = new Chart(document.getElementById("deptChart"), {
+    type: "bar",
+    data: { labels: dLabels, datasets:[{ data:dVals, backgroundColor:"#4f8bff" }]},
+    options: {
+      plugins:{ legend:{display:false}},
+      scales:{
+        x:{ ticks:{color:"#ccc"}, grid:{display:false}},
+        y:{ ticks:{color:"#ccc"}, grid:{color:"rgba(255,255,255,0.08)"}}
+      }
+    }
+  });
+
+
+  // Gender chart
+  const genderMap = countBy(employees, e => e.gender);
+  const gLabels = Object.keys(genderMap);
+  const gVals = Object.values(genderMap);
+
+  if (charts.gender) charts.gender.destroy();
+  charts.gender = new Chart(document.getElementById("genderChart"), {
+    type:"doughnut",
+    data:{
+      labels:gLabels,
+      datasets:[{
+        data:gVals,
+        backgroundColor:["#4f8bff","#ff6b9b","#ffce6e","#7f9cff"],
+        borderWidth:0
+      }]
+    },
+    options:{ plugins:{ legend:{ labels:{color:"#ccc"}}}}
+  });
+
+
+  // Age chart
+  const ageMap = countBy(employees, ageGroup);
+  const aLabels = Object.keys(ageMap);
+  const aVals = Object.values(ageMap);
+
+  if (charts.age) charts.age.destroy();
+  charts.age = new Chart(document.getElementById("ageChart"), {
+    type:"bar",
+    data:{
+      labels:aLabels,
+      datasets:[{
+        data:aVals,
+        backgroundColor:"#ff6b9b",
+        borderWidth:0
+      }]
+    },
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:"#ccc"},grid:{display:false}},
+        y:{ticks:{color:"#ccc"},grid:{color:"rgba(255,255,255,0.08)"}}
+      }
+    }
+  });
+
+  renderProbationTable();
+}
+
+
+/* ==========================================
+   AGE GROUPS
+========================================== */
+function ageGroup(e) {
+  const d = parseDate(e.dob);
+  if (!d) return "Unknown";
+
+  const now = new Date();
+  let age = now.getFullYear() - d.getFullYear();
+  const m = now.getMonth() - d.getMonth();
+
+  if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+
+  if (age < 25) return "Under 25";
+  if (age < 35) return "25–34";
+  if (age < 45) return "35–44";
+  if (age < 55) return "45–54";
+  return "55+";
+}
+
+
+/* ==========================================
+   PROBATION TABLE
+========================================== */
+function renderProbationTable() {
+  const tbody = document.getElementById("probationTableBody");
+  tbody.innerHTML = "";
+
+  const now = new Date();
+
+  const list = employees
+    .filter(e => e.status_clean === "Probation")
+    .map(e => {
+      const end = parseDate(e.probation_end);
+      const daysLeft = end ? Math.ceil((end - now) / (1000*60*60*24)) : null;
+      return { e, end, daysLeft };
+    })
+    .filter(x => x.daysLeft !== null && x.daysLeft >= 0 && x.daysLeft <= 30)
+    .sort((a,b) => a.daysLeft - b.daysLeft);
+
+  if (!list.length) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td colspan="4" style="text-align:center; padding:14px; opacity:0.6;">No probation ending soon</td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+
+  list.forEach(x => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${x.e.name}</td>
+      <td>${x.e.department}</td>
+      <td>${formatDate(x.e.probation_end)}</td>
+      <td>${x.daysLeft}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+/* ==========================================
+   PEOPLE FILTERS
+========================================== */
+function setupPeopleFilters() {
+  document.getElementById("searchInput").oninput = applyPeopleFilters;
+  document.getElementById("filterStatus").onchange = applyPeopleFilters;
+  document.getElementById("filterDept").onchange = applyPeopleFilters;
+  document.getElementById("filterCountry").onchange = applyPeopleFilters;
+}
+
+function buildPeopleFilters() {
+  const deptSel = document.getElementById("filterDept");
+  const countrySel = document.getElementById("filterCountry");
+
+  const depts = [...new Set(employees.map(e => e.department).filter(Boolean))].sort();
+  depts.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.innerText = d;
+    deptSel.appendChild(opt);
+  });
+
+  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
+  countries.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.innerText = c;
+    countrySel.appendChild(opt);
+  });
+}
+
+function applyPeopleFilters() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const fs = document.getElementById("filterStatus").value;
+  const fd = document.getElementById("filterDept").value;
+  const fc = document.getElementById("filterCountry").value;
+
+  let list = employees.slice();
+
+  list = list.filter(e => {
+    let ok = true;
+
+    if (fs) ok = ok && e.status_clean === fs;
+    if (fd) ok = ok && e.department === fd;
+    if (fc) ok = ok && e.country === fc;
+
+    if (search) {
+      const blob = (e.name + " " + e.designation + " " + e.department).toLowerCase();
+      ok = ok && blob.includes(search);
+    }
+
+    return ok;
+  });
+
+  renderPeopleTable(list);
+}
+
+function renderPeopleTable(list) {
+  const tbody = document.getElementById("employeeTableBody");
+  tbody.innerHTML = "";
+
+  if (!list.length) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td colspan="10" style="padding:14px; opacity:0.6; text-align:center;">No employees found</td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+
+  list.forEach(e => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${e.id}</td>
+      <td>${e.name}</td>
+      <td>${e.designation}</td>
+      <td>${e.department}</td>
+      <td>${e.country}</td>
+      <td>${badgeStatus(e.status_clean)}</td>
+      <td>${formatDate(e.joining_date)}</td>
+      <td>${formatDate(e.probation_end)}</td>
+      <td>${formatNumber(e.base_salary)}</td>
+      <td>${e.salary_currency}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function badgeStatus(st) {
+  if (st === "Active") return `<span class="status-pill status-active">Active</span>`;
+  if (st === "Probation") return `<span class="status-pill status-probation">Probation</span>`;
+  return `<span class="status-pill status-inactive">Inactive</span>`;
+}
+
+
+/* ==========================================
+   COMPENSATION PANEL
+========================================== */
+function buildCompCountryFilter() {
+  const sel = document.getElementById("compCountry");
+  const countries = [...new Set(employees.map(e => e.country).filter(Boolean))].sort();
+
+  countries.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.innerText = c;
+    sel.appendChild(opt);
+  });
+
+  sel.onchange = () => renderCompensation();
+}
+
+function salaryNPR(e) {
+  const rate = fxRates[e.salary_currency] || 1;
+  return e.base_salary * rate;
+}
+
+function renderCompensation() {
+  const fc = document.getElementById("compCountry").value;
+
+  let list = employees.slice();
+  if (fc) list = list.filter(e => e.country === fc);
+
+  const total = list.reduce((s,e) => s + salaryNPR(e), 0);
+  const avg = list.length ? total / list.length : 0;
+
+  document.getElementById("totalPayrollNPR").innerText = formatNumber(total);
+  document.getElementById("avgSalaryNPR").innerText = formatNumber(avg);
+
+  renderCurrencyCards(list);
+  renderCountryPayrollTable();
+}
+
+function renderCurrencyCards(list) {
+  const wrap = document.getElementById("currencyCards");
+  wrap.innerHTML = "";
+
+  const map = {};
+
+  list.forEach(e => {
+    if (!map[e.salary_currency]) {
+      map[e.salary_currency] = { count: 0, total: 0, rate: fxRates[e.salary_currency] };
+    }
+    map[e.salary_currency].count++;
+    map[e.salary_currency].total += e.base_salary;
+  });
+
+  Object.keys(map).forEach(cur => {
+    const obj = map[cur];
+
+    const div = document.createElement("div");
+    div.style = `
+      padding:14px; margin-bottom:10px;
+      background:rgba(255,255,255,0.08);
+      border:var(--border-soft);
+      border-radius:12px;
+    `;
+    div.innerHTML = `
+      <div style="font-size:15px; font-weight:600;">${cur}</div>
+      <div style="font-size:13px; margin-top:4px;">Employees: ${obj.count}</div>
+      <div style="font-size:13px; margin-top:4px;">
+        Total: ${formatNumber(obj.total)} ${cur}
+      </div>
+      <div style="font-size:12px; opacity:0.7; margin-top:4px;">
+        FX → NPR: ${obj.rate}
+      </div>
+      <div style="font-size:14px; margin-top:6px; font-weight:600;">
+        NPR: ${formatNumber(obj.total * obj.rate)}
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function renderCountryPayrollTable() {
+  const tbody = document.getElementById("countryPayrollBody");
+  tbody.innerHTML = "";
+
+  const map = {};
+
+  employees.forEach(e => {
+    if (!map[e.country]) map[e.country] = { count: 0, total: 0 };
+    map[e.country].count++;
+    map[e.country].total += salaryNPR(e);
+  });
+
+  const list = Object.keys(map).map(k => ({
+    country: k,
+    count: map[k].count,
+    total: map[k].total
+  })).sort((a,b) => b.total - a.total);
+
+  document.getElementById("topCountryName").innerText = list.length ? list[0].country : "–";
+  document.getElementById("topCountryVal").innerText = list.length ? formatNumber(list[0].total) + " NPR" : "";
+
+  list.forEach(x => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${x.country}</td>
+      <td>${x.count}</td>
+      <td>${formatNumber(x.total)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+/* ==========================================
+   COUNT MAP
+========================================== */
+function countBy(list, fn) {
+  const map = {};
+  list.forEach(e => {
+    const k = fn(e);
+    map[k] = (map[k] || 0) + 1;
+  });
+  return map;
+}
+
+
+/* ==========================================
+   TENURE CARD CLICK FILTERS
+========================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  renderEmployeeTableSection();
+
+  document.getElementById("tenure0_3_card").onclick = () => {
+    switchTab("people");
+    const filtered = employees.filter(e => {
+      const t = calcTenureMonths(e.joining_date);
+      return t !== null && t >= 0 && t < 3;
+    });
+    renderPeopleTable(filtered);
+  };
+
+  document.getElementById("tenure3_12_card").onclick = () => {
+    switchTab("people");
+    const filtered = employees.filter(e => {
+      const t = calcTenureMonths(e.joining_date);
+      return t >= 3 && t < 12;
+    });
+    renderPeopleTable(filtered);
+  };
+
+  document.getElementById("tenure12_24_card").onclick = () => {
+    switchTab("people");
+    const filtered = employees.filter(e => {
+      const t = calcTenureMonths(e.joining_date);
+      return t >= 12 && t < 24;
+    });
+    renderPeopleTable(filtered);
+  };
+
+  document.getElementById("tenure24p_card").onclick = () => {
+    switchTab("people");
+    const filtered = employees.filter(e => {
+      const t = calcTenureMonths(e.joining_date);
+      return t >= 24;
+    });
+    renderPeopleTable(filtered);
+  };
+
 });
 
+
+/* ==========================================
+   TAB SWITCH
+========================================== */
+function setupTabs() {
+  const tabs = document.querySelectorAll(".tab");
+  const panels = document.querySelectorAll(".tab-panel");
+
+  tabs.forEach(t => {
+    t.onclick = () => {
+      tabs.forEach(x => x.classList.remove("active"));
+      panels.forEach(p => p.classList.remove("active"));
+
+      t.classList.add("active");
+      const id = "tab-" + t.dataset.tab;
+      document.getElementById(id).classList.add("active");
+    };
+  });
+}
+
+function switchTab(key) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(t => t.classList.remove("active"));
+
+  document.querySelector(`.tab[data-tab='${key}']`).classList.add("active");
+  document.getElementById("tab-" + key).classList.add("active");
+}
+
+
+/* ==========================================
+   INIT
+========================================== */
+async function init() {
+
+  await loadHRData();
+
+  renderKPIs();
+  renderTenureCards();
+  renderOverviewCharts();
+
+  buildPeopleFilters();
+  setupPeopleFilters();
+  applyPeopleFilters();
+
+  buildCompCountryFilter();
+  renderCompensation();
+
+  setupTabs();
+}
+
+init();
+
+</script>
+
+</body>
+</html>
 
